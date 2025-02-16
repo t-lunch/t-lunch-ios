@@ -9,13 +9,37 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if #available(iOS 18.0, *){
+            TabView {
+                Tab("Главная", systemImage: "house") {
+                    HomeView()
+                }
+                Tab("Главная", systemImage: "clock") {
+                    HistoryView()
+                }
+                Tab("Профиль", systemImage: "person") {
+                    ProfileView()
+                }
+            }
+        } else {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("Главная")
+                    }
+                HistoryView()
+                    .tabItem {
+                        Image(systemName: "clock")
+                        Text("История")
+                    }
+                ProfileView()
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Профиль")
+                    }
+            }
         }
-        .padding()
     }
 }
 
