@@ -15,6 +15,7 @@ struct ProfileRedactView: View {
             VStack() {
                 LunchTextField(prompt: "Ваше имя", text: $vm.name, title: "Имя")
                 LunchTextField(prompt: "Ваша фамилия", text: $vm.surname, title: "Фамилия")
+                LunchTextField(prompt: "Ваш эмодзи-аватар", text: $vm.emojiIcon, title: "Эмодзи-аватар")
                 LunchTextField(prompt: "Ваш ник в телеграм", text: $vm.tgContact, title: "ТГ-контакт")
                 
                 Spacer()

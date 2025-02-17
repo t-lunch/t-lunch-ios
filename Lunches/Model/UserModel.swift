@@ -12,6 +12,7 @@ protocol UserModel: AnyObject & Identifiable {
     
     var name: String { get set }
     var surname: String { get set }
+    var emojiIcon: String? { get }
     
     var tgContact: String? { get set }
 }
@@ -26,6 +27,7 @@ final class MainUser: UserModel {
     
     var name: String
     var surname: String
+    var emojiIcon: String?
     
     var tgContact: String?
     
@@ -36,15 +38,17 @@ final class MainUser: UserModel {
         self.name = "Тестовый"
         self.surname = "Пользователь"
         self.tgContact = "tgcontact52"
+        self.emojiIcon = "😼"
     }
 #endif
     
-    init(login: String, password: String, name: String, surname: String, tgContact: String? = nil) {
+    init(login: String, password: String, name: String, surname: String, tgContact: String? = nil, emojiIcon: String? = nil) {
         self.login = login
         self.password = password
         self.name = name
         self.surname = surname
         self.tgContact = tgContact
+        self.emojiIcon = emojiIcon
     }
 }
 
@@ -52,8 +56,9 @@ final class User: UserModel {
     let id = UUID()
     
     var name: String
-    
     var surname: String
+    
+    var emojiIcon: String?
     
     var tgContact: String?
     

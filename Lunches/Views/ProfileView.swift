@@ -13,10 +13,21 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack() {
             VStack(spacing: 0) {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 128))
-                    .foregroundStyle(.gray)
-                    .padding()
+                if vm.emojiIcon != nil {
+                    ZStack {
+                        Image(systemName: "circle.fill")
+                            .font(.system(size: 128))
+                            .foregroundStyle(.tYellow.opacity(0.5))
+                            .padding()
+                        Text(vm.emojiIcon!)
+                            .font(.system(size: 90))
+                    }
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 128))
+                        .foregroundStyle(.gray)
+                        .padding()
+                }
                 Text("\(vm.name) \(vm.surname)")
                     .font(.system(size: 20))
                     .bold()
