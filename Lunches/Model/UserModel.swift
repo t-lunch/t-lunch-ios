@@ -49,10 +49,14 @@ final class MainUser: UserModel {
         self.surname = surname
         self.tgContact = tgContact
         self.emojiIcon = emojiIcon
+        
+        User.userBase.append(User(self))
     }
 }
 
 final class User: UserModel {
+    static var userBase: [User] = []
+    
     let id = UUID()
     
     var name: String
@@ -62,9 +66,19 @@ final class User: UserModel {
     
     var tgContact: String?
     
-    init(name: String, surname: String, tgContact: String? = nil) {
+    init(name: String, surname: String, tgContact: String? = nil, emojiIcon: String? = nil) {
         self.name = name
         self.surname = surname
         self.tgContact = tgContact
+        self.emojiIcon = emojiIcon
+        
+        User.userBase.append(self)
+    }
+    
+    init(_ usr: MainUser) {
+        self.name = usr.name
+        self.surname = usr.surname
+        self.tgContact = usr.tgContact
+        self.emojiIcon = usr.emojiIcon
     }
 }

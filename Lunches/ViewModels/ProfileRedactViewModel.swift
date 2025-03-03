@@ -23,4 +23,8 @@ final class ProfileRedactViewModel: ObservableObject {
     func saveButtonAction() {
         
     }
+    
+    func logOutAction() -> Bool {
+        true
+    }
 }

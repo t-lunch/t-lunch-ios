@@ -16,8 +16,8 @@ struct HistoryView: View {
         NavigationStack() {
             ScrollView {
                 VStack(spacing: 24) {
-                    LunchCard(lunch: Lunch(), isLiked: $isLiked)
-                    LunchCard(lunch: Lunch(), isLiked: $isLiked1)
+                    LunchCard(lunch: Lunch.example, isLiked: $isLiked)
+                    LunchCard(lunch: Lunch.example, isLiked: $isLiked1)
                 }
             }
             .searchable(text: $vm.searchText, prompt: "Поиск")

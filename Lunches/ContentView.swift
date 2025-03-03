@@ -7,7 +7,26 @@
 
 import SwiftUI
 
+class ContentViewModel: ObservableObject {
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+}
+
 struct ContentView: View {
+    @StateObject var viewModel = ContentViewModel()
+    
+    var body: some View {
+        Group {
+            if !viewModel.isLoggedIn {
+                LoginView()
+            } else {
+                MainView()
+            }
+        }
+        .environmentObject(viewModel)
+    }
+}
+
+struct MainView: View {
     var body: some View {
         if #available(iOS 18.0, *){
             TabView {

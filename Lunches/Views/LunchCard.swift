@@ -20,12 +20,15 @@ struct LunchCard: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text("Обед от \(MainUser.shared.name)")
-                        .font(.title2)
+                        .font(.title3)
                         .bold()
                     Spacer()
                     if isLiked != nil {
                         Button {
-                            isLiked!.wrappedValue.toggle()
+                            withAnimation(.bouncy) {
+                                isLiked!.wrappedValue.toggle()
+                            }
+
                         } label: {
                             Image(systemName: isLiked!.wrappedValue ? "heart.fill" : "heart")
                                 .font(.system(size: 28))
@@ -50,15 +53,17 @@ struct LunchCard: View {
             }
             .padding()
         }
-        .aspectRatio(19/11, contentMode: .fit)
+        .aspectRatio(2/1, contentMode: .fit)
         .padding(.horizontal)
     }
     
     func label(title: String, image: String) -> some View {
-        HStack {
+        let imageSize = 38.0
+        
+        return HStack {
             Image(systemName: image)
                 .foregroundColor(.white)
-                .frame(width: 40, height: 40)
+                .frame(width: imageSize, height: imageSize)
                 .background {
                     Circle()
                         .fill(.blue)
@@ -69,5 +74,5 @@ struct LunchCard: View {
 }
 
 #Preview {
-    LunchCard(lunch: Lunch(), isAvailable: true, isLiked: Binding( get: { true }, set: { _ in }))
+    LunchCard(lunch: Lunch.example, isAvailable: true, isLiked: Binding( get: { true }, set: { _ in }))
 }

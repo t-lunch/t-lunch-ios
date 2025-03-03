@@ -38,8 +38,10 @@ struct LunchTextField: View {
                         if #available(iOS 17.0, *) {
                             Image(systemName: isSecured!.wrappedValue ? "eye.slash" : "eye")
                                 .contentTransition(.symbolEffect(.replace))
+                                .frame(height: 22)
                         } else {
                             Image(systemName: isSecured!.wrappedValue ? "eye.slash" : "eye")
+                                .frame(height: 22)
                         }
                     }
                     .padding()

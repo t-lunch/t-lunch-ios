@@ -28,7 +28,7 @@ extension ButtonStyle where Self == LunchButtonStyle {
 struct SmallLunchButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(18)
+            .padding(15)
             .foregroundColor(.black)
             .background(configuration.isPressed ? Color(.systemGray6) : .tYellow)
             .cornerRadius(10)

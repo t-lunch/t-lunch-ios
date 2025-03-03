@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfileRedactView: View {
+    @EnvironmentObject var contentViewModel: ContentViewModel
+    @Environment(\.dismiss) var dismiss
     @StateObject var vm = ProfileRedactViewModel()
     
     var body: some View {
@@ -22,9 +24,19 @@ struct ProfileRedactView: View {
                 
                 Button("Сохранить") {
                     vm.saveButtonAction()
+                    dismiss()
                 }
                 .buttonStyle(.lunchButton)
                 .padding(.vertical, 10)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Выйти") {
+                        if vm.logOutAction() {
+                            contentViewModel.isLoggedIn = false
+                        }
+                    }
+                }
             }
             .navigationTitle("Редактирование профиля")
             .navigationBarTitleDisplayMode(.inline)
