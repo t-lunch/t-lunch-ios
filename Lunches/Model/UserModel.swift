@@ -39,6 +39,8 @@ final class MainUser: UserModel {
         self.surname = "Пользователь"
         self.tgContact = "tgcontact52"
         self.emojiIcon = "😼"
+        
+        User.userBase.append(User(self))
     }
 #endif
     

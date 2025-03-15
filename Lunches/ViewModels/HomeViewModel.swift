@@ -10,6 +10,8 @@ import SwiftUI
 final class HomeViewModel: ObservableObject {
     @Published var searchText = ""
     
+    @Published var selectedLunch: Lunch? = nil
+    
     @Published var isAddingSheetPresented = false
     @Published var sheetTimeSelection = "11:00"
     @Published var sheetPlaceSelection = "Кухня"

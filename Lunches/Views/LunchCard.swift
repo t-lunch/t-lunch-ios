@@ -19,7 +19,7 @@ struct LunchCard: View {
                 .shadow(color: .primary.opacity(0.2), radius: 10)
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Обед от \(MainUser.shared.name)")
+                    Text("Обед от \(lunch.creator)")
                         .font(.title3)
                         .bold()
                     Spacer()
@@ -36,9 +36,9 @@ struct LunchCard: View {
                         }
                     }
                 }
-                label(title: "Кухня", image: "mappin")
-                label(title: "14:00", image: "alarm")
-                label(title: "2 участника", image: "person.2")
+                LunchCardLabel(title: lunch.place.title(), image: "mappin")
+                LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
+                LunchCardLabel(title: uchastnika(lunch.participants.count), image: "person.2")
                 
                 if isAvailable {
                     Button {
@@ -56,11 +56,16 @@ struct LunchCard: View {
         .aspectRatio(2/1, contentMode: .fit)
         .padding(.horizontal)
     }
+}
+
+struct LunchCardLabel: View {
+    var title: String
+    var image: String
     
-    func label(title: String, image: String) -> some View {
-        let imageSize = 38.0
-        
-        return HStack {
+    let imageSize = 38.0
+    
+    var body: some View {
+        HStack {
             Image(systemName: image)
                 .foregroundColor(.white)
                 .frame(width: imageSize, height: imageSize)
@@ -70,6 +75,18 @@ struct LunchCard: View {
                 }
             Text(title)
         }
+    }
+}
+
+///cклоняет слово 'участника'
+func uchastnika(_ n: Int) -> String {
+    switch n % 10 {
+    case 1:
+        "\(n) участник"
+    case 2...4:
+        "\(n) участник"
+    default:
+        "\(n) участников"
     }
 }
 

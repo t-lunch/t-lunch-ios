@@ -7,7 +7,9 @@
 
 import Foundation
 
-struct Lunch {
+struct Lunch: Identifiable {
+    let id = UUID()
+    
     let creator: User.ID
     var time: Date
     var place: Place
@@ -18,14 +20,25 @@ struct Lunch {
 extension Lunch {
     static let example = Lunch(
         creator: MainUser.shared.id,
-        time: Date().addingTimeInterval(3600),
-        place: .kithcen,
+        time: Date(timeIntervalSince1970: 3600 * 12),
+        place: .restaurant("СВОе место"),
         notes: "Some notes",
         participants: [MainUser.shared.id]
     )
 }
 
-enum Place: String {
-    case restaurant = ""
-    case kithcen
+enum Place {
+    case restaurant(String)
+    case kitchen
+    
+    func title() -> String{
+        switch self {
+        case .restaurant(let str):
+            return str
+        case .kitchen:
+            return "Кухня"
+        }
+    }
 }
+
+let mockLunches: [Lunch] = Array(repeating: Lunch.example, count: 4)

@@ -14,10 +14,12 @@ struct HomeView: View {
         NavigationStack() {
             ScrollView {
                 VStack(spacing: 24) {
-                    LunchCard(lunch: Lunch.example, isAvailable: true)
-                    LunchCard(lunch: Lunch.example, isAvailable: true)
-                    LunchCard(lunch: Lunch.example, isAvailable: true)
-                    LunchCard(lunch: Lunch.example, isAvailable: true)
+                    ForEach(mockLunches) { lunch in
+                        LunchCard(lunch: lunch, isAvailable: true)
+                            .onTapGesture {
+                                vm.selectedLunch = lunch
+                            }
+                    }
                 }
             }
             .searchable(text: $vm.searchText, prompt: "Поиск")
@@ -30,6 +32,12 @@ struct HomeView: View {
                     }
                 }
             }
+            .sheet(item: $vm.selectedLunch, onDismiss: {
+                vm.selectedLunch = nil
+            }) { lunch in
+                DetailView(lunch: lunch)
+                    .presentationDragIndicator(.visible)
+            }
             .sheet(isPresented: $vm.isAddingSheetPresented, onDismiss: {
                 vm.isAddingSheetPresented = false
             }) {
@@ -37,6 +45,86 @@ struct HomeView: View {
                     .presentationDragIndicator(.visible)
             }
             .navigationTitle("Главная")
+        }
+    }
+}
+
+struct DetailView: View {
+    let lunch: Lunch
+    @State var isAvailable: Bool = true
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 25) {
+            header
+            
+            labelsSection
+            notesSection
+            
+            participantsSection
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    var participantsSection: some View {
+        Section {
+            ForEach(lunch.participants, id: \.self) { participant in
+                HStack {
+                    Text(User.userBase.first { $0.id == participant }?.name ?? "Имя")
+                    
+                    Spacer()
+                    
+                    Button {
+                        
+                    } label: {
+                        TelegramIcon()
+                            .frame(width: 30, height: 30)
+                    }
+                }
+            }
+        }
+    }
+    
+    var header: some View {
+        HStack {
+            Text("Обед от \(lunch.creator)")
+                .font(.system(size: 20, weight: .bold))
+            Spacer()
+            Button(action: {
+                dismiss()
+            }) {
+                Image(systemName: "xmark")
+                    .bold()
+                    .foregroundStyle(.secondary)
+                    .padding(10)
+                    .background {
+                        Circle()
+                            .foregroundStyle(.secondary.opacity(0.5))
+                    }
+                    .scaleEffect(0.8)
+            }
+            .foregroundStyle(.primary)
+        }
+    }
+    
+    var labelsSection: some View {
+        VStack(alignment: .leading) {
+            LunchCardLabel(title: lunch.place.title(), image: "mappin")
+            LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
+            LunchCardLabel(title: uchastnika(lunch.participants.count), image: "person.2")
+        }
+    }
+    
+    var notesSection: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            if let notes = lunch.notes {
+                Text("Примечания")
+                Text(notes)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }
