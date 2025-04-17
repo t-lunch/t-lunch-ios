@@ -7,7 +7,7 @@
 
 
 protocol LunchNetworkManagerProtocol {
-    var token: String { get set }
+    var authManager: any AuthManagerProtocol { get }
 
     func registration(request: RegistrationRequest, completion: @escaping (User?) -> Void)
     func login(request: LoginRequest, completion: @escaping (LoginResponse?) -> Void)

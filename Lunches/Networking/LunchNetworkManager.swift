@@ -11,10 +11,11 @@ import SwiftUI
 
 struct LunchNetworkManager: LunchNetworkManagerProtocol {
     private let service: APIService
-    @AppStorage("notificationsToken") var token: String = ""
+    let authManager: any AuthManagerProtocol
 
-    init(service: APIService) {
+    init(service: APIService, authManager: any AuthManagerProtocol) {
         self.service = service
+        self.authManager = authManager
     }
 
     func registration(request: RegistrationRequest, completion: @escaping (User?) -> Void) {
@@ -38,12 +39,15 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LoginResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
                 completion(nil)
                 return
+            }
+            if let response = response {
+                self.authManager.saveTokens(access: response.accessToken, refresh: response.refreshToken)
             }
             completion(response)
         }
@@ -54,12 +58,15 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: RefreshResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
                 completion(nil)
                 return
+            }
+            if let response = response {
+                self.authManager.saveTokens(access: response.accessToken, refresh: token)
             }
             completion(response)
         }

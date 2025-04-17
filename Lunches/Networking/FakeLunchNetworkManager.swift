@@ -8,7 +8,11 @@
 import Foundation
 
 final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
-    var token: String = ""
+    let authManager: any AuthManagerProtocol
+    
+    init(authManager: any AuthManagerProtocol) {
+        self.authManager = authManager
+    }
 
     func registration(request: RegistrationRequest, completion: @escaping (User?) -> Void) {
         let user = User(userId: 1, name: request.name, surname: request.surname, tg: request.tg, office: request.office, emoji: request.emoji)
@@ -17,11 +21,13 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
 
     func login(request: LoginRequest, completion: @escaping (LoginResponse?) -> Void) {
         let response = LoginResponse(accessToken: "fakeAccessToken", refreshToken: "fakeRefreshToken")
+        authManager.setIsAuthorized(to: true)
         completion(response)
     }
 
     func refresh(token: String, completion: @escaping (RefreshResponse?) -> Void) {
         let response = RefreshResponse(accessToken: "newFakeAccessToken")
+        authManager.setIsAuthorized(to: true)
         completion(response)
     }
 
