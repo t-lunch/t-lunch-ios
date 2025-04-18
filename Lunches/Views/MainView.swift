@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainView: View {
+    var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
+    
     var body: some View {
         TabView {
             HomeView()
@@ -20,11 +23,12 @@ struct MainView: View {
                     Image(systemName: "clock")
                     Text("История")
                 }
-            ProfileView()
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Профиль")
-                }
+            ProfileView(authManager: authManager,
+                        networkManager: networkManager)
+            .tabItem {
+                Image(systemName: "person")
+                Text("Профиль")
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ struct LunchCard: View {
                 .shadow(color: .primary.opacity(0.2), radius: 10)
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Обед от \(lunch.creator)")
+                    Text("Обед от \(lunch.name)")
                         .font(.title3)
                         .bold()
                     Spacer()
@@ -36,9 +36,9 @@ struct LunchCard: View {
                         }
                     }
                 }
-                LunchCardLabel(title: lunch.place.title(), image: "mappin")
+                LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-                LunchCardLabel(title: uchastnika(lunch.participants.count), image: "person.2")
+                LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
                 
                 if isAvailable {
                     Button {

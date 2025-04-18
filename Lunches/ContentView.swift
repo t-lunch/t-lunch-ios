@@ -23,7 +23,8 @@ struct ContentView: View {
             if !viewModel.isAuthorized {
                 LoginView(networkManager: networkManager)
             } else {
-                MainView()
+                MainView(authManager: authManager,
+                         networkManager: networkManager)
             }
         }
     }

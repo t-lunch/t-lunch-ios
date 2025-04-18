@@ -8,23 +8,46 @@
 import SwiftUI
 
 final class ProfileRedactViewModel: ObservableObject {
-    @Published var name: String = ""
-    @Published var surname: String = ""
-    @Published var tgContact: String = ""
-    @Published var emojiIcon: String = ""
+    var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
     
-    init() {
-        self.name = MainUser.shared.name
-        self.surname = MainUser.shared.surname
-        self.tgContact = MainUser.shared.tgContact ?? ""
-        self.emojiIcon = MainUser.shared.emojiIcon ?? ""
+    @Published var name: String
+    @Published var surname: String
+    @Published var tgContact: String
+    @Published var emojiIcon: String
+    
+    @Published var office: String
+    
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
+        self.authManager = authManager
+        self.networkManager = networkManager
+        
+        self.name = ""
+        self.surname = ""
+        self.tgContact = ""
+        self.emojiIcon = ""
+        
+        self.office = ""
+    }
+    
+    func fetchData() {
+        networkManager.getProfile(userId: Int64(authManager.userId)) { user in
+            if let user = user {
+                self.name = user.name
+                self.surname = user.surname
+                self.tgContact = user.tg
+                self.emojiIcon = user.emoji
+                
+                self.office = user.office
+            }
+        }
     }
     
     func saveButtonAction() {
-        
+        networkManager.changeProfile(user: User(userId: 1, name: name, surname: surname, tg: tgContact, office: office, emoji: emojiIcon)) { _ in }
     }
     
-    func logOutAction() -> Bool {
-        true
+    func logOutAction() {
+        authManager.clearTokens()
     }
 }

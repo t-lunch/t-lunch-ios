@@ -8,18 +8,26 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject var vm = ProfileViewModel()
+    @StateObject var viewModel: ProfileViewModel
+    var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
+        self.authManager = authManager
+        self.networkManager = networkManager
+        _viewModel = StateObject(wrappedValue: ProfileViewModel(authManager: authManager, networkManager: networkManager))
+    }
     
     var body: some View {
         NavigationStack() {
             VStack(spacing: 0) {
-                if vm.emojiIcon != nil {
+                if viewModel.emojiIcon != nil {
                     ZStack {
                         Image(systemName: "circle.fill")
                             .font(.system(size: 128))
                             .foregroundStyle(.tYellow.opacity(0.5))
                             .padding()
-                        Text(vm.emojiIcon!)
+                        Text(viewModel.emojiIcon!)
                             .font(.system(size: 90))
                     }
                 } else {
@@ -28,11 +36,11 @@ struct ProfileView: View {
                         .foregroundStyle(.gray)
                         .padding()
                 }
-                Text("\(vm.name) \(vm.surname)")
+                Text("\(viewModel.name) \(viewModel.surname)")
                     .font(.system(size: 20))
                     .bold()
                 
-                if let tg = vm.tgContact {
+                if let tg = viewModel.tgContact {
                     HStack {
                         TelegramIcon()
                             .frame(width: 30, height: 30)
@@ -46,10 +54,14 @@ struct ProfileView: View {
                 
                 Spacer()
             }
+            .onAppear {
+                viewModel.fetchData()
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink("Редактировать") {
-                        ProfileRedactView()
+                        ProfileRedactView(authManager: authManager,
+                                          networkManager: networkManager)
                     }
                 }
             }
@@ -59,5 +71,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
 }

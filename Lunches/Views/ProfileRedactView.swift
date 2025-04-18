@@ -8,33 +8,43 @@
 import SwiftUI
 
 struct ProfileRedactView: View {
-    @EnvironmentObject var contentViewModel: ContentViewModel
     @Environment(\.dismiss) var dismiss
-    @StateObject var vm = ProfileRedactViewModel()
+    @StateObject var viewModel: ProfileRedactViewModel
+    
+    var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
+        self.authManager = authManager
+        self.networkManager = networkManager
+        _viewModel = StateObject(wrappedValue: ProfileRedactViewModel(authManager: authManager,
+                                                                      networkManager: networkManager))
+    }
     
     var body: some View {
         NavigationStack() {
             VStack() {
-                LunchTextField(prompt: "Ваше имя", text: $vm.name, title: "Имя")
-                LunchTextField(prompt: "Ваша фамилия", text: $vm.surname, title: "Фамилия")
-                LunchTextField(prompt: "Ваш эмодзи-аватар", text: $vm.emojiIcon, title: "Эмодзи-аватар")
-                LunchTextField(prompt: "Ваш ник в телеграм", text: $vm.tgContact, title: "ТГ-контакт")
+                LunchTextField(prompt: "Ваше имя", text: $viewModel.name, title: "Имя")
+                LunchTextField(prompt: "Ваша фамилия", text: $viewModel.surname, title: "Фамилия")
+                LunchTextField(prompt: "Ваш эмодзи-аватар", text: $viewModel.emojiIcon, title: "Эмодзи-аватар")
+                LunchTextField(prompt: "Ваш ник в телеграм", text: $viewModel.tgContact, title: "ТГ-контакт")
                 
                 Spacer()
                 
                 Button("Сохранить") {
-                    vm.saveButtonAction()
+                    viewModel.saveButtonAction()
                     dismiss()
                 }
                 .buttonStyle(.lunchButton)
                 .padding(.vertical, 10)
             }
+            .onAppear {
+                viewModel.fetchData()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Выйти") {
-                        if vm.logOutAction() {
-                            contentViewModel.isLoggedIn = false
-                        }
+                        viewModel.logOutAction()
                     }
                 }
             }
@@ -45,5 +55,5 @@ struct ProfileRedactView: View {
 }
 
 #Preview {
-    ProfileRedactView()
+    ProfileRedactView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
 }
