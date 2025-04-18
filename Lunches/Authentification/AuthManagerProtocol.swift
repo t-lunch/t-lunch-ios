@@ -14,6 +14,6 @@ protocol AuthManagerProtocol: ObservableObject {
 
     func saveTokens(access: String, refresh: String)
     func clearTokens()
-    
+
     func setIsAuthorized(to isAuthorized: Bool)
 }

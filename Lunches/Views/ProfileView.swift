@@ -11,15 +11,15 @@ struct ProfileView: View {
     @StateObject var viewModel: ProfileViewModel
     var authManager: AuthManager
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
         self.authManager = authManager
         self.networkManager = networkManager
         _viewModel = StateObject(wrappedValue: ProfileViewModel(authManager: authManager, networkManager: networkManager))
     }
-    
+
     var body: some View {
-        NavigationStack() {
+        NavigationStack {
             VStack(spacing: 0) {
                 if viewModel.emojiIcon != nil {
                     ZStack {
@@ -39,19 +39,19 @@ struct ProfileView: View {
                 Text("\(viewModel.name) \(viewModel.surname)")
                     .font(.system(size: 20))
                     .bold()
-                
+
                 if let tg = viewModel.tgContact {
                     HStack {
                         TelegramIcon()
                             .frame(width: 30, height: 30)
                             .foregroundStyle(.blue)
                         Text(tg)
-                        
+
                         Spacer()
                     }
                     .padding()
                 }
-                
+
                 Spacer()
             }
             .onAppear {

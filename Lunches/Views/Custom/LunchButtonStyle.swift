@@ -43,8 +43,6 @@ extension ButtonStyle where Self == SmallLunchButtonStyle {
 }
 
 #Preview {
-    Button("Вход") {
-        
-    }
-    .buttonStyle(.lunchButton)
+    Button("Вход") {}
+        .buttonStyle(.lunchButton)
 }

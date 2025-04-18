@@ -11,7 +11,7 @@ struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
     var isLiked: Binding<Bool>? = nil
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
@@ -39,11 +39,9 @@ struct LunchCard: View {
                 LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
                 LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
-                
+
                 if isAvailable {
-                    Button {
-                        
-                    } label: {
+                    Button {} label: {
                         Text("Присоединиться")
                             .frame(maxWidth: .infinity)
                     }
@@ -53,7 +51,7 @@ struct LunchCard: View {
             }
             .padding()
         }
-        .aspectRatio(2/1, contentMode: .fit)
+        .aspectRatio(2 / 1, contentMode: .fit)
         .padding(.horizontal)
     }
 }
@@ -61,9 +59,9 @@ struct LunchCard: View {
 struct LunchCardLabel: View {
     var title: String
     var image: String
-    
+
     let imageSize = 38.0
-    
+
     var body: some View {
         HStack {
             Image(systemName: image)
@@ -78,12 +76,12 @@ struct LunchCardLabel: View {
     }
 }
 
-///cклоняет слово 'участника'
+/// cклоняет слово 'участника'
 func uchastnika(_ n: Int) -> String {
     switch n % 10 {
     case 1:
         "\(n) участник"
-    case 2...4:
+    case 2 ... 4:
         "\(n) участник"
     default:
         "\(n) участников"
@@ -91,5 +89,5 @@ func uchastnika(_ n: Int) -> String {
 }
 
 #Preview {
-    LunchCard(lunch: Lunch.example, isAvailable: true, isLiked: Binding( get: { true }, set: { _ in }))
+    LunchCard(lunch: Lunch.example, isAvailable: true, isLiked: Binding(get: { true }, set: { _ in }))
 }

@@ -10,22 +10,22 @@ import SwiftUI
 final class ProfileViewModel: ObservableObject {
     var networkManager: LunchNetworkManagerProtocol
     var authManager: AuthManager
-    
+
     @Published var name: String
     @Published var surname: String
     @Published var tgContact: String?
     @Published var emojiIcon: String?
-    
+
     init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
         self.networkManager = networkManager
         self.authManager = authManager
-        
-        self.name = ""
-        self.surname = ""
-        self.tgContact = ""
-        self.emojiIcon = ""
+
+        name = ""
+        surname = ""
+        tgContact = ""
+        emojiIcon = ""
     }
-    
+
     func fetchData() {
         networkManager.getProfile(userId: Int64(authManager.userId)) { user in
             if let user = user {

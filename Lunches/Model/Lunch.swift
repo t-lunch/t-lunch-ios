@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Lunch
+
 struct Lunch: Codable, Identifiable, Equatable {
     let id: Int64
     let name: String
@@ -41,11 +42,12 @@ extension Lunch {
                                numberOfParticipants: 12,
                                description: "descriptiondescriptiondescriptiondescriptiondescriptiondescription",
                                users: [
-                                User(userId: 0, name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂")
+                                   User(userId: 0, name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂"),
                                ])
 }
 
 // MARK: - LunchFeedback
+
 struct LunchFeedback: Codable, Equatable {
     let lunch: Lunch
     var isLiked: Bool
@@ -59,6 +61,7 @@ extension LunchFeedback {
 }
 
 // MARK: - LunchRequest
+
 struct LunchRequest: Codable, Equatable {
     let userId: Int64
     let offset: Int32
@@ -74,6 +77,7 @@ extension LunchRequest {
 }
 
 // MARK: - GetLunchesResponse
+
 struct GetLunchesResponse: Codable, Equatable {
     let lunches: [Lunch]
     let lunchId: Int64?
@@ -87,6 +91,7 @@ extension GetLunchesResponse {
 }
 
 // MARK: - CreateLunchRequest
+
 struct CreateLunchRequest: Codable, Equatable {
     let userId: Int64
     let place: String
@@ -104,11 +109,13 @@ extension CreateLunchRequest {
 }
 
 // MARK: - LunchResponse
+
 struct LunchResponse: Codable, Equatable {
     let lunch: Lunch
 }
 
 // MARK: - ActionLunchRequest
+
 struct ActionLunchRequest: Codable, Equatable {
     let lunchId: Int64
     let userId: Int64
@@ -122,6 +129,7 @@ extension ActionLunchRequest {
 }
 
 // MARK: - DetailLunchRequest
+
 struct DetailLunchRequest: Codable, Equatable {
     let lunchId: Int64
 }
@@ -133,11 +141,13 @@ extension DetailLunchRequest {
 }
 
 // MARK: - LunchHistoryResponse
+
 struct LunchHistoryResponse: Codable, Equatable {
     let lunches: [LunchFeedback]
 }
 
 // MARK: - RateLunchRequest
+
 struct RateLunchRequest: Codable, Equatable {
     let userId: Int64
     let lunchId: Int64

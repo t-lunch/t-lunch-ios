@@ -10,10 +10,10 @@ import Foundation
 enum Place {
     case restaurant(String)
     case kitchen
-    
-    func title() -> String{
+
+    func title() -> String {
         switch self {
-        case .restaurant(let str):
+        case let .restaurant(str):
             return str
         case .kitchen:
             return "Кухня"

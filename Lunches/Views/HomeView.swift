@@ -9,18 +9,18 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
-    
+
     var authManager: AuthManager
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
         self.authManager = authManager
         self.networkManager = networkManager
         _viewModel = StateObject(wrappedValue: HomeViewModel(authManager: authManager, networkManager: networkManager))
     }
-    
+
     var body: some View {
-        NavigationStack() {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach(viewModel.lunches) { lunch in
@@ -65,32 +65,30 @@ struct DetailView: View {
     let lunch: Lunch
     @State var isAvailable: Bool = true
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 25) {
             header
-            
+
             labelsSection
             notesSection
-            
+
             participantsSection
-            
+
             Spacer()
         }
         .padding()
     }
-    
+
     var participantsSection: some View {
         Section {
             ForEach(lunch.users, id: \.userId) { participant in
                 HStack {
                     Text(participant.name)
-                    
+
                     Spacer()
-                    
-                    Button {
-                        
-                    } label: {
+
+                    Button {} label: {
                         TelegramIcon()
                             .frame(width: 30, height: 30)
                     }
@@ -98,7 +96,7 @@ struct DetailView: View {
             }
         }
     }
-    
+
     var header: some View {
         HStack {
             Text("Обед от \(lunch.name)")
@@ -120,7 +118,7 @@ struct DetailView: View {
             .foregroundStyle(.primary)
         }
     }
-    
+
     var labelsSection: some View {
         VStack(alignment: .leading) {
             LunchCardLabel(title: lunch.name, image: "mappin")
@@ -128,7 +126,7 @@ struct DetailView: View {
             LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
         }
     }
-    
+
     var notesSection: some View {
         VStack(alignment: .leading, spacing: 5) {
             if let notes = lunch.description {

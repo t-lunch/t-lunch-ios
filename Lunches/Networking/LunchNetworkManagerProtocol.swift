@@ -5,7 +5,6 @@
 //  Created by Андрей Степанов on 16.04.2025.
 //
 
-
 protocol LunchNetworkManagerProtocol {
     var authManager: AuthManager { get }
 

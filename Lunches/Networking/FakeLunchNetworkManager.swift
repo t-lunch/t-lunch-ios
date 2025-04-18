@@ -9,7 +9,7 @@ import Foundation
 
 final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     let authManager: AuthManager
-    
+
     init(authManager: AuthManager) {
         self.authManager = authManager
     }
@@ -20,13 +20,13 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
         completion(user)
     }
 
-    func login(request: LoginRequest, completion: @escaping (LoginResponse?) -> Void) {
+    func login(request _: LoginRequest, completion: @escaping (LoginResponse?) -> Void) {
         let response = LoginResponse(accessToken: "fakeAccessToken", refreshToken: "fakeRefreshToken")
         authManager.setIsAuthorized(to: true)
         completion(response)
     }
 
-    func refresh(token: String, completion: @escaping (RefreshResponse?) -> Void) {
+    func refresh(token _: String, completion: @escaping (RefreshResponse?) -> Void) {
         let response = RefreshResponse(accessToken: "newFakeAccessToken")
         authManager.setIsAuthorized(to: true)
         completion(response)
@@ -41,7 +41,7 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
         completion(user)
     }
 
-    func getLunches(userId: Int64, offset: Int32, limit: Int32, completion: @escaping ([Lunch]) -> Void) {
+    func getLunches(userId _: Int64, offset _: Int32, limit _: Int32, completion: @escaping ([Lunch]) -> Void) {
         let lunch = Lunch(id: 1, name: "Анна", surname: "Петрова", place: "Кафе 'Еда'", time: Date(), numberOfParticipants: 3, description: "Обед всей командой", users: [])
         completion([lunch])
     }
@@ -51,12 +51,12 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
         completion(LunchResponse(lunch: lunch))
     }
 
-    func joinLunch(lunchId: Int64, userId: Int64, completion: @escaping (LunchResponse?) -> Void) {
+    func joinLunch(lunchId: Int64, userId _: Int64, completion: @escaping (LunchResponse?) -> Void) {
         let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 4, description: "Обед", users: [])
         completion(LunchResponse(lunch: lunch))
     }
 
-    func leaveLunch(lunchId: Int64, userId: Int64, completion: @escaping (LunchResponse?) -> Void) {
+    func leaveLunch(lunchId: Int64, userId _: Int64, completion: @escaping (LunchResponse?) -> Void) {
         let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 2, description: "Обед", users: [])
         completion(LunchResponse(lunch: lunch))
     }
@@ -66,12 +66,12 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
         completion(LunchResponse(lunch: lunch))
     }
 
-    func getLunchHistory(userId: Int64, completion: @escaping ([Lunch]) -> Void) {
+    func getLunchHistory(userId _: Int64, completion: @escaping ([Lunch]) -> Void) {
         let lunch = Lunch(id: 42, name: "Игорь", surname: "К", place: "Пельменная", time: Date(), numberOfParticipants: 5, description: "История обедов", users: [])
         completion([lunch])
     }
 
-    func rateLunch(userId: Int64, lunchId: Int64, isLiked: Bool, completion: @escaping (LunchFeedback?) -> Void) {
+    func rateLunch(userId _: Int64, lunchId: Int64, isLiked: Bool, completion: @escaping (LunchFeedback?) -> Void) {
         let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 3, description: nil, users: [])
         let feedback = LunchFeedback(lunch: lunch, isLiked: isLiked)
         completion(feedback)

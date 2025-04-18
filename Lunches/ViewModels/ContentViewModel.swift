@@ -9,11 +9,11 @@ import SwiftUI
 
 class ContentViewModel: ObservableObject {
     @ObservedObject var authManager: AuthManager
-    
+
     init(authManager: AuthManager) {
         self.authManager = authManager
     }
-    
+
     var isAuthorized: Bool {
         authManager.isAuthorized
     }

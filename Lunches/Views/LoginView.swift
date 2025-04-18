@@ -10,12 +10,12 @@ import SwiftUI
 struct LoginView: View {
     @StateObject var viewModel: LoginViewModel
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(networkManager: LunchNetworkManagerProtocol) {
         self.networkManager = networkManager
         _viewModel = StateObject(wrappedValue: LoginViewModel(networkManager: networkManager))
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -30,25 +30,23 @@ struct LoginView: View {
                     LunchTextField(prompt: "Ваш логин", text: $viewModel.email, title: "Логин")
                     LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
                         .padding(.bottom, 20)
-                    Button("Забыли пароль?") {
-                        
-                    }
-                    .foregroundStyle(.primary)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.horizontal, 25)
+                    Button("Забыли пароль?") {}
+                        .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.horizontal, 25)
                 }
-                
+
                 Spacer()
-                
+
                 Button("Войти") {
                     viewModel.loginButtonAction()
                 }
                 .buttonStyle(.lunchButton)
-                
+
                 HStack {
                     Text("Еще нет аккаунта?")
                         .fontWeight(.light)
-                    NavigationLink() {
+                    NavigationLink {
                         SignUpView(networkManager: networkManager)
                     } label: {
                         Text("Зарегистрироваться")

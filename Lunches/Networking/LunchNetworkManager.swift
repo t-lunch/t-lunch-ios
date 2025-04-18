@@ -5,7 +5,6 @@
 //  Created by Андрей Степанов on 16.04.2025.
 //
 
-
 import Foundation
 import SwiftUI
 
@@ -23,7 +22,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: User.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -77,7 +76,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: User.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -93,7 +92,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: User.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -109,7 +108,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion([])
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: [Lunch].self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -125,7 +124,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -141,7 +140,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -157,7 +156,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -173,7 +172,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -189,7 +188,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion([])
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: [Lunch].self) { response, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -205,7 +204,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
             completion(nil)
             return
         }
-        
+
         service.makeRequest(with: urlRequest, respModel: LunchFeedback.self) { response, error in
             if let error = error {
                 print(error.localizedDescription)

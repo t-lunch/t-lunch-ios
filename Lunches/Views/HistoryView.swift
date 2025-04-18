@@ -9,21 +9,21 @@ import SwiftUI
 
 struct HistoryView: View {
     @StateObject var viewModel: HistoryViewModel
-    
+
     var authManager: AuthManager
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
         self.authManager = authManager
         self.networkManager = networkManager
         _viewModel = StateObject(wrappedValue: HistoryViewModel(authManager: authManager, networkManager: networkManager))
     }
-    
+
     @State var isLiked: Bool = true
     @State var isLiked1: Bool = false
-    
+
     var body: some View {
-        NavigationStack() {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach($viewModel.lunches, id: \.lunch.id) { $lunch in
@@ -39,7 +39,6 @@ struct HistoryView: View {
         }
     }
 }
-
 
 #Preview {
     HistoryView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))

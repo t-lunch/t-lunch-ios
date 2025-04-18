@@ -25,7 +25,7 @@ final class AuthManager: AuthManagerProtocol {
     }
 
     init() {
-        self.isAuthorized = accessToken != nil
+        isAuthorized = accessToken != nil
     }
 
     func saveTokens(access: String, refresh: String) {
@@ -39,7 +39,7 @@ final class AuthManager: AuthManagerProtocol {
         userDefaults.removeObject(forKey: refreshTokenKey)
         isAuthorized = false
     }
-    
+
     func setIsAuthorized(to isAuthorized: Bool) {
         self.isAuthorized = isAuthorized
     }

@@ -74,7 +74,7 @@ enum LunchEndpoint {
         case let .getLunches(_, _, offset, limit):
             return [
                 URLQueryItem(name: "offset", value: String(offset)),
-                URLQueryItem(name: "limit", value: String(limit))
+                URLQueryItem(name: "limit", value: String(limit)),
             ]
         default:
             return []
@@ -136,4 +136,3 @@ extension URLRequest {
         }
     }
 }
-

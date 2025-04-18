@@ -11,13 +11,13 @@ struct ContentView: View {
     @StateObject var viewModel: ContentViewModel
     @ObservedObject var authManager: AuthManager
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(appCoordinator: AppCoordinator) {
         authManager = appCoordinator.authManager
         networkManager = appCoordinator.networkManager
         _viewModel = StateObject(wrappedValue: ContentViewModel(authManager: appCoordinator.authManager))
     }
-    
+
     var body: some View {
         Group {
             if !viewModel.isAuthorized {

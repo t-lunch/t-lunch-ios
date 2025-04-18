@@ -12,14 +12,14 @@ struct LunchTextField: View {
     var text: Binding<String>
     var title: String? = nil
     var isSecured: Binding<Bool>? = nil
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if title != nil {
                 Text(title!)
                     .font(.system(size: 14))
             }
-            
+
             HStack {
                 if isSecured != nil {
                     if isSecured!.wrappedValue {
@@ -29,9 +29,9 @@ struct LunchTextField: View {
                         TextField(prompt, text: text)
                             .padding()
                     }
-                    
+
                     Spacer()
-                
+
                     Button {
                         isSecured!.wrappedValue.toggle()
                     } label: {
@@ -47,7 +47,7 @@ struct LunchTextField: View {
                     .padding()
                     .foregroundStyle(.gray)
                 }
-                
+
                 else {
                     TextField(prompt, text: text)
                         .padding()
@@ -63,13 +63,12 @@ struct LunchTextField: View {
     }
 }
 
-
 #Preview {
     LunchTextField(prompt: "Ваш логин",
-                   text: Binding( get: { "" }, set: { _ in }),
+                   text: Binding(get: { "" }, set: { _ in }),
                    title: "Логин")
-    
-    LunchTextField(text: Binding( get: { "" }, set: { _ in }),
+
+    LunchTextField(text: Binding(get: { "" }, set: { _ in }),
                    title: "Пароль",
-                   isSecured: Binding( get: { true }, set: { _ in }))
+                   isSecured: Binding(get: { true }, set: { _ in }))
 }

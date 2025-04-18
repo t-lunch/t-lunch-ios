@@ -37,7 +37,7 @@ class APIService: Service {
 
     func makeRequest<T: Codable>(
         with request: URLRequest,
-        respModel: T.Type,
+        respModel _: T.Type,
         completion: @escaping (T?, APIError?) -> Void
     ) {
         urlSession.dataTask(with: request) { data, resp, error in

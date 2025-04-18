@@ -10,12 +10,12 @@ import SwiftUI
 struct SignUpView: View {
     @StateObject var viewModel: SignUpViewModel
     var networkManager: LunchNetworkManagerProtocol
-    
+
     init(networkManager: LunchNetworkManagerProtocol) {
         self.networkManager = networkManager
         _viewModel = StateObject(wrappedValue: SignUpViewModel(networkManager: networkManager))
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -34,14 +34,14 @@ struct SignUpView: View {
                     LunchTextField(prompt: "Ваша фамилия", text: $viewModel.surname, title: "Фамилия")
                     LunchTextField(prompt: "Ваш ник в телеграм", text: $viewModel.tgContact, title: "ТГ-контакт")
                 }
-                
+
                 Spacer()
-                
+
                 Button("Зарегистрироваться") {
                     viewModel.signInButtonAction()
                 }
                 .buttonStyle(.lunchButton)
-                
+
                 HStack {
                     Text("Уже зарегистрированы?")
                         .fontWeight(.light)

@@ -10,27 +10,27 @@ import SwiftUI
 struct MainView: View {
     var authManager: AuthManager
     var networkManager: LunchNetworkManagerProtocol
-    
+
     var body: some View {
         TabView {
             HomeView(authManager: authManager,
                      networkManager: networkManager)
-            .tabItem {
-                Image(systemName: "house")
-                Text("Главная")
-            }
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Главная")
+                }
             HistoryView(authManager: authManager,
                         networkManager: networkManager)
-            .tabItem {
-                Image(systemName: "clock")
-                Text("История")
-            }
+                .tabItem {
+                    Image(systemName: "clock")
+                    Text("История")
+                }
             ProfileView(authManager: authManager,
                         networkManager: networkManager)
-            .tabItem {
-                Image(systemName: "person")
-                Text("Профиль")
-            }
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Профиль")
+                }
         }
     }
 }

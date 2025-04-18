@@ -9,24 +9,24 @@ import SwiftUI
 
 struct AddingView: View {
     @ObservedObject var vm: HomeViewModel
-    
+
     var body: some View {
         VStack {
             header
-            
+
             timeSelection
-            
+
             placeSelection
-            
+
             notesSelection
-            
+
             Spacer()
-            
+
             saveButton
         }
         .animation(.bouncy, value: vm.sheetPlaceSelection)
     }
-    
+
     var header: some View {
         HStack {
             Text("Новое событие")
@@ -50,7 +50,7 @@ struct AddingView: View {
         .padding(.top)
         .padding(.horizontal)
     }
-    
+
     var timeSelection: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Время")
@@ -58,12 +58,12 @@ struct AddingView: View {
             SelectionView(cards: generateTimeSlots(start: "11:00", end: "15:00", interval: 15), selectedCard: $vm.sheetTimeSelection)
         }
     }
-    
+
     var placeSelection: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Место")
                 .padding(.horizontal)
-            
+
             SelectionView(cards: ["Кухня", "Свое место"], selectedCard: $vm.sheetPlaceSelection)
             if vm.sheetPlaceSelection == "Свое место" {
                 LunchTextField(prompt: "Введите название места", text: $vm.sheetPlaceName)
@@ -71,7 +71,7 @@ struct AddingView: View {
             }
         }
     }
-    
+
     var notesSelection: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Примечания")
@@ -80,7 +80,7 @@ struct AddingView: View {
                 .padding(.horizontal, -8)
         }
     }
-    
+
     var saveButton: some View {
         Button("Создать") {
             vm.isAddingSheetPresented = false
@@ -93,14 +93,14 @@ struct AddingView: View {
 struct SelectionView: View {
     let cards: [String]
     @Binding var selectedCard: String
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
                 if #unavailable(iOS 17.0) {
                     Spacer().frame(width: 10)
                 }
-                
+
                 ForEach(cards, id: \.self) { card in
                     Button(action: {
                         selectedCard = card
@@ -114,7 +114,7 @@ struct SelectionView: View {
                     }
                     .foregroundStyle(.primary)
                 }
-                
+
                 if #unavailable(iOS 17.0) {
                     Spacer().frame(width: 10)
                 }
@@ -149,6 +149,6 @@ func generateTimeSlots(start: String, end: String, interval: Int) -> [String] {
         times.append(formatter.string(from: currentTime))
         currentTime = Calendar.current.date(byAdding: .minute, value: interval, to: currentTime)!
     }
-    
+
     return times
 }
