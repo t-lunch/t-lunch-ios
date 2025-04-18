@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var contentViewModel: ContentViewModel
-    @StateObject var vm = LoginViewModel()
+    @StateObject var viewModel: LoginViewModel
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(networkManager: LunchNetworkManagerProtocol) {
+        self.networkManager = networkManager
+        _viewModel = StateObject(wrappedValue: LoginViewModel(networkManager: networkManager))
+    }
     
     var body: some View {
         NavigationStack {
@@ -22,8 +27,8 @@ struct LoginView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding()
-                    LunchTextField(prompt: "Ваш логин", text: $vm.login, title: "Логин")
-                    LunchTextField(text: $vm.password, title: "Пароль", isSecured: $vm.isPasswordFieldSecured)
+                    LunchTextField(prompt: "Ваш логин", text: $viewModel.email, title: "Логин")
+                    LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
                         .padding(.bottom, 20)
                     Button("Забыли пароль?") {
                         
@@ -36,7 +41,7 @@ struct LoginView: View {
                 Spacer()
                 
                 Button("Войти") {
-                    contentViewModel.isLoggedIn = vm.loginButtonAction()
+                    viewModel.loginButtonAction()
                 }
                 .buttonStyle(.lunchButton)
                 
@@ -61,5 +66,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
 }

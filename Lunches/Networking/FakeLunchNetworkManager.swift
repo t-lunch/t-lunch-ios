@@ -8,9 +8,9 @@
 import Foundation
 
 final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
-    let authManager: any AuthManagerProtocol
+    let authManager: AuthManager
     
-    init(authManager: any AuthManagerProtocol) {
+    init(authManager: AuthManager) {
         self.authManager = authManager
     }
 

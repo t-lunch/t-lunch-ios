@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct LunchesApp: App {
+    var appCoordinator = AppCoordinator()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(appCoordinator: appCoordinator)
         }
     }
 }

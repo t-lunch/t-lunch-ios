@@ -8,19 +8,23 @@
 import SwiftUI
 
 final class LoginViewModel: ObservableObject {
-    @Published var login: String
+    let networkManager: LunchNetworkManagerProtocol
+    
+    @Published var email: String
     @Published var password: String
     
     @Published var isPasswordFieldSecured: Bool
     
-    init() {
-        self.login = ""
+    init(networkManager: LunchNetworkManagerProtocol) {
+        self.networkManager = networkManager
+        
+        self.email = ""
         self.password = ""
         
         self.isPasswordFieldSecured = true
     }
     
-    func loginButtonAction() -> Bool {
-        true
+    func loginButtonAction() {
+        networkManager.login(request: LoginRequest(email: email, password: password)) { _ in }
     }
 }

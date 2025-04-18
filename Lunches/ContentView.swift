@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = ContentViewModel()
+    @StateObject var viewModel: ContentViewModel
+    @ObservedObject var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(appCoordinator: AppCoordinator) {
+        authManager = appCoordinator.authManager
+        networkManager = appCoordinator.networkManager
+        _viewModel = StateObject(wrappedValue: ContentViewModel(authManager: appCoordinator.authManager))
+    }
     
     var body: some View {
         Group {
-            if !viewModel.isLoggedIn {
-                LoginView()
+            if !viewModel.isAuthorized {
+                LoginView(networkManager: networkManager)
             } else {
                 MainView()
             }
         }
-        .environmentObject(viewModel)
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(appCoordinator: AppCoordinator())
 }

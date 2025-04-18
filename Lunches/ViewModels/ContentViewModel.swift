@@ -8,5 +8,13 @@
 import SwiftUI
 
 class ContentViewModel: ObservableObject {
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @ObservedObject var authManager: AuthManager
+    
+    init(authManager: AuthManager) {
+        self.authManager = authManager
+    }
+    
+    var isAuthorized: Bool {
+        authManager.isAuthorized
+    }
 }

@@ -11,9 +11,9 @@ import SwiftUI
 
 struct LunchNetworkManager: LunchNetworkManagerProtocol {
     private let service: APIService
-    let authManager: any AuthManagerProtocol
+    let authManager: AuthManager
 
-    init(service: APIService, authManager: any AuthManagerProtocol) {
+    init(service: APIService, authManager: AuthManager) {
         self.service = service
         self.authManager = authManager
     }
