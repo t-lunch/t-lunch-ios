@@ -16,6 +16,7 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
 
     func registration(request: RegistrationRequest, completion: @escaping (User?) -> Void) {
         let user = User(userId: 1, name: request.name, surname: request.surname, tg: request.tg, office: request.office, emoji: request.emoji)
+        authManager.setIsAuthorized(to: true)
         completion(user)
     }
 

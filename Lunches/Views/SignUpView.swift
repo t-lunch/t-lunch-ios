@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @EnvironmentObject var contentViewModel: ContentViewModel
-    @StateObject var vm = SignUpViewModel()
+    @StateObject var viewModel: SignUpViewModel
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(networkManager: LunchNetworkManagerProtocol) {
+        self.networkManager = networkManager
+        _viewModel = StateObject(wrappedValue: SignUpViewModel(networkManager: networkManager))
+    }
     
     var body: some View {
         NavigationStack {
@@ -22,18 +27,18 @@ struct SignUpView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding()
-                    LunchTextField(prompt: "Ваш логин", text: $vm.login, title: "Логин")
-                    LunchTextField(text: $vm.password, title: "Пароль", isSecured: $vm.isPasswordFieldSecured)
+                    LunchTextField(prompt: "Ваш e-mail", text: $viewModel.email, title: "Логин")
+                    LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
                         .padding(.bottom, 20)
-                    LunchTextField(prompt: "Ваше имя", text: $vm.name, title: "Имя")
-                    LunchTextField(prompt: "Ваша фамилия", text: $vm.surname, title: "Фамилия")
-                    LunchTextField(prompt: "Ваш ник в телеграм", text: $vm.tgContact, title: "ТГ-контакт")
+                    LunchTextField(prompt: "Ваше имя", text: $viewModel.name, title: "Имя")
+                    LunchTextField(prompt: "Ваша фамилия", text: $viewModel.surname, title: "Фамилия")
+                    LunchTextField(prompt: "Ваш ник в телеграм", text: $viewModel.tgContact, title: "ТГ-контакт")
                 }
                 
                 Spacer()
                 
                 Button("Зарегистрироваться") {
-                    contentViewModel.isLoggedIn = vm.signInButtonAction()
+                    viewModel.signInButtonAction()
                 }
                 .buttonStyle(.lunchButton)
                 
@@ -41,7 +46,7 @@ struct SignUpView: View {
                     Text("Уже зарегистрированы?")
                         .fontWeight(.light)
                     NavigationLink {
-                        LoginView()
+                        LoginView(networkManager: networkManager)
                     } label: {
                         Text("Войти")
                             .bold()
@@ -58,5 +63,5 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView()
+    SignUpView(networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
 }

@@ -49,7 +49,7 @@ struct LoginView: View {
                     Text("Еще нет аккаунта?")
                         .fontWeight(.light)
                     NavigationLink() {
-                        SignUpView()
+                        SignUpView(networkManager: networkManager)
                     } label: {
                         Text("Зарегистрироваться")
                             .bold()
