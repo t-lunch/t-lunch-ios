@@ -45,4 +45,19 @@ final class HomeViewModel: ObservableObject {
     func addButtonAction() {
         isAddingSheetPresented = true
     }
+    
+    func saveNewLunch() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone.current
+        
+        if let date = formatter.date(from: sheetTimeSelection) {
+            networkManager.createLunch(request: CreateLunchRequest(userId: Int64(authManager.userId), place: sheetPlaceName == "" ? "Кухня" : sheetPlaceName, time: date, description: sheetNotes)) { response in
+                print(response as Any)
+            }
+        } else {
+            print("Ошибка парсинга времени")
+        }
+    }
 }

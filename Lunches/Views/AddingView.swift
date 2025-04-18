@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddingView: View {
-    @ObservedObject var vm: HomeViewModel
+    @ObservedObject var viewModel: HomeViewModel
 
     var body: some View {
         VStack {
@@ -24,7 +24,7 @@ struct AddingView: View {
 
             saveButton
         }
-        .animation(.bouncy, value: vm.sheetPlaceSelection)
+        .animation(.bouncy, value: viewModel.sheetPlaceSelection)
     }
 
     var header: some View {
@@ -33,7 +33,7 @@ struct AddingView: View {
                 .font(.system(size: 20, weight: .bold))
             Spacer()
             Button(action: {
-                vm.isAddingSheetPresented = false
+                viewModel.isAddingSheetPresented = false
             }) {
                 Image(systemName: "xmark")
                     .bold()
@@ -55,7 +55,7 @@ struct AddingView: View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Время")
                 .padding(.horizontal)
-            SelectionView(cards: generateTimeSlots(start: "11:00", end: "15:00", interval: 15), selectedCard: $vm.sheetTimeSelection)
+            SelectionView(cards: generateTimeSlots(start: "11:00", end: "15:00", interval: 15), selectedCard: $viewModel.sheetTimeSelection)
         }
     }
 
@@ -64,9 +64,9 @@ struct AddingView: View {
             Text("Место")
                 .padding(.horizontal)
 
-            SelectionView(cards: ["Кухня", "Свое место"], selectedCard: $vm.sheetPlaceSelection)
-            if vm.sheetPlaceSelection == "Свое место" {
-                LunchTextField(prompt: "Введите название места", text: $vm.sheetPlaceName)
+            SelectionView(cards: ["Кухня", "Свое место"], selectedCard: $viewModel.sheetPlaceSelection)
+            if viewModel.sheetPlaceSelection == "Свое место" {
+                LunchTextField(prompt: "Введите название места", text: $viewModel.sheetPlaceName)
                     .padding(.horizontal, -8)
             }
         }
@@ -76,14 +76,14 @@ struct AddingView: View {
         VStack(alignment: .leading, spacing: 5) {
             Text("Примечания")
                 .padding(.horizontal)
-            LunchTextField(prompt: "Ваши примечания", text: $vm.sheetNotes)
+            LunchTextField(prompt: "Ваши примечания", text: $viewModel.sheetNotes)
                 .padding(.horizontal, -8)
         }
     }
 
     var saveButton: some View {
         Button("Создать") {
-            vm.isAddingSheetPresented = false
+            viewModel.saveNewLunch()
         }
         .buttonStyle(.lunchButton)
         .padding(.horizontal, -8)

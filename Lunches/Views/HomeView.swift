@@ -24,10 +24,14 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach(viewModel.lunches) { lunch in
-                        LunchCard(lunch: lunch, isAvailable: true)
-                            .onTapGesture {
-                                viewModel.selectedLunch = lunch
+                        LunchCard(lunch: lunch, isAvailable: true, joinAction: {
+                            networkManager.joinLunch(lunchId: lunch.id, userId: Int64(authManager.userId)) { response in
+                                print(response as Any)
                             }
+                        })
+                        .onTapGesture {
+                            viewModel.selectedLunch = lunch
+                        }
                     }
                 }
             }
@@ -53,7 +57,7 @@ struct HomeView: View {
             .sheet(isPresented: $viewModel.isAddingSheetPresented, onDismiss: {
                 viewModel.isAddingSheetPresented = false
             }) {
-                AddingView(vm: viewModel)
+                AddingView(viewModel: viewModel)
                     .presentationDragIndicator(.visible)
             }
             .navigationTitle("Главная")

@@ -11,6 +11,7 @@ struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
     var isLiked: Binding<Bool>? = nil
+    var joinAction: () -> () = {}
 
     var body: some View {
         ZStack {
@@ -41,7 +42,9 @@ struct LunchCard: View {
                 LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
 
                 if isAvailable {
-                    Button {} label: {
+                    Button {
+                        joinAction()
+                    } label: {
                         Text("Присоединиться")
                             .frame(maxWidth: .infinity)
                     }
@@ -82,7 +85,7 @@ func uchastnika(_ n: Int) -> String {
     case 1:
         "\(n) участник"
     case 2 ... 4:
-        "\(n) участник"
+        "\(n) участника"
     default:
         "\(n) участников"
     }
