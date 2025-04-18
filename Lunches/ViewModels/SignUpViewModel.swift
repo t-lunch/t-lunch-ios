@@ -41,7 +41,7 @@ final class SignUpViewModel: ObservableObject {
     
     func signInButtonAction() {
         networkManager.registration(request: RegistrationRequest(name: name, surname: surname, tg: tgContact, office: office, emoji: emoji, email: email, password: password)) { responce in
-                print(responce)
+            print(responce as Any)
         }
     }
 }

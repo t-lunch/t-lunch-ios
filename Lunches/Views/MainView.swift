@@ -13,11 +13,12 @@ struct MainView: View {
     
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Главная")
-                }
+            HomeView(authManager: authManager,
+                     networkManager: networkManager)
+            .tabItem {
+                Image(systemName: "house")
+                Text("Главная")
+            }
             HistoryView(authManager: authManager,
                         networkManager: networkManager)
             .tabItem {
