@@ -8,7 +8,17 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @StateObject var vm = HistoryViewModel()
+    @StateObject var viewModel: HistoryViewModel
+    
+    var authManager: AuthManager
+    var networkManager: LunchNetworkManagerProtocol
+    
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
+        self.authManager = authManager
+        self.networkManager = networkManager
+        _viewModel = StateObject(wrappedValue: HistoryViewModel(authManager: authManager, networkManager: networkManager))
+    }
+    
     @State var isLiked: Bool = true
     @State var isLiked1: Bool = false
     
@@ -16,11 +26,15 @@ struct HistoryView: View {
         NavigationStack() {
             ScrollView {
                 VStack(spacing: 24) {
-                    LunchCard(lunch: Lunch.example, isLiked: $isLiked)
-                    LunchCard(lunch: Lunch.example, isLiked: $isLiked1)
+                    ForEach($viewModel.lunches, id: \.lunch.id) { $lunch in
+                        LunchCard(lunch: lunch.lunch, isLiked: $lunch.isLiked)
+                    }
                 }
             }
-            .searchable(text: $vm.searchText, prompt: "Поиск")
+            .onAppear {
+                viewModel.fetchData()
+            }
+            .searchable(text: $viewModel.searchText, prompt: "Поиск")
             .navigationTitle("История")
         }
     }
@@ -28,5 +42,5 @@ struct HistoryView: View {
 
 
 #Preview {
-    HistoryView()
+    HistoryView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
 }

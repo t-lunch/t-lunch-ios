@@ -18,11 +18,12 @@ struct MainView: View {
                     Image(systemName: "house")
                     Text("Главная")
                 }
-            HistoryView()
-                .tabItem {
-                    Image(systemName: "clock")
-                    Text("История")
-                }
+            HistoryView(authManager: authManager,
+                        networkManager: networkManager)
+            .tabItem {
+                Image(systemName: "clock")
+                Text("История")
+            }
             ProfileView(authManager: authManager,
                         networkManager: networkManager)
             .tabItem {

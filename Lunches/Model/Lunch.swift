@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Lunch
-struct Lunch: Codable, Equatable {
+struct Lunch: Codable, Identifiable, Equatable {
     let id: Int64
     let name: String
     let surname: String
@@ -32,10 +32,23 @@ extension Lunch {
     }
 }
 
+extension Lunch {
+    static let example = Lunch(id: 0,
+                               name: "Name",
+                               surname: "Surname",
+                               place: "Place",
+                               time: Date(),
+                               numberOfParticipants: 12,
+                               description: "descriptiondescriptiondescriptiondescriptiondescriptiondescription",
+                               users: [
+                                User(userId: 0, name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂")
+                               ])
+}
+
 // MARK: - LunchFeedback
 struct LunchFeedback: Codable, Equatable {
     let lunch: Lunch
-    let isLiked: Bool
+    var isLiked: Bool
 }
 
 extension LunchFeedback {
