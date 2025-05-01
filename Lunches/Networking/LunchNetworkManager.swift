@@ -13,9 +13,9 @@ private let logger = Logger(label: "com.lunches.network")
 
 struct LunchNetworkManager: LunchNetworkManagerProtocol {
     private let service: APIService
-    let authManager: AuthManager
+    private let authManager: any AuthManagerProtocol
 
-    init(service: APIService, authManager: AuthManager) {
+    init(service: APIService, authManager: any AuthManagerProtocol) {
         self.service = service
         self.authManager = authManager
     }

@@ -6,8 +6,6 @@
 //
 
 protocol LunchNetworkManagerProtocol {
-    var authManager: AuthManager { get }
-
     func registration(request: RegistrationRequest, completion: @escaping (Result<User, APIError>) -> Void)
     func login(request: LoginRequest, completion: @escaping (Result<LoginResponse, APIError>) -> Void)
     func refresh(token: String, completion: @escaping (Result<RefreshResponse, APIError>) -> Void)
