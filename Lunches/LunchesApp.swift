@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct LunchesApp: App {
-    var appCoordinator = AppCoordinator()
+    var viewModelFactory: ViewModelFactory = .makePreview()
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appCoordinator: appCoordinator)
+            ContentView(viewModel: viewModelFactory.makeContentViewModel())
         }
     }
 }

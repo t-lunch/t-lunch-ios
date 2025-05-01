@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var viewModel: LoginViewModel
-    var networkManager: LunchNetworkManagerProtocol
-
-    init(networkManager: LunchNetworkManagerProtocol) {
-        self.networkManager = networkManager
-        _viewModel = StateObject(wrappedValue: LoginViewModel(networkManager: networkManager))
-    }
+    @ObservedObject var viewModel: LoginViewModel
 
     var body: some View {
         NavigationStack {
@@ -27,8 +21,12 @@ struct LoginView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding()
-                    LunchTextField(prompt: "Ваш логин", text: $viewModel.email, title: "Логин")
-                    LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
+                    LunchTextField(prompt: "Ваш логин",
+                                   text: $viewModel.email,
+                                   title: "Логин")
+                    LunchTextField(text: $viewModel.password,
+                                   title: "Пароль",
+                                   isSecured: $viewModel.isPasswordFieldSecured)
                         .padding(.bottom, 20)
                     Button("Забыли пароль?") {}
                         .foregroundStyle(.primary)
@@ -47,7 +45,7 @@ struct LoginView: View {
                     Text("Еще нет аккаунта?")
                         .fontWeight(.light)
                     NavigationLink {
-                        SignUpView(networkManager: networkManager)
+                        SignUpView(viewModel: viewModel.makeSignUpViewModel())
                     } label: {
                         Text("Зарегистрироваться")
                             .bold()
@@ -64,5 +62,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
+    LoginView(viewModel: ViewModelFactory.previewContent.makeLoginViewModel())
 }

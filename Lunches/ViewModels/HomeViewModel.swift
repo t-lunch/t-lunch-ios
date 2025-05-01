@@ -10,6 +10,7 @@ import SwiftUI
 final class HomeViewModel: ObservableObject {
     var networkManager: LunchNetworkManagerProtocol
     var authManager: AuthManager
+    var globalLogger: GlobalLogger
 
     @Published var searchText: String
 
@@ -22,9 +23,10 @@ final class HomeViewModel: ObservableObject {
     @Published var sheetPlaceName: String
     @Published var sheetNotes: String
 
-    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol, globalLogger: GlobalLogger) {
         self.networkManager = networkManager
         self.authManager = authManager
+        self.globalLogger = globalLogger
 
         lunches = []
         searchText = ""
@@ -38,12 +40,39 @@ final class HomeViewModel: ObservableObject {
 
     func fetchData() {
         networkManager.getLunches(userId: Int64(authManager.userId), offset: 0, limit: 100) { result in
-            self.lunches = result
+            switch result {
+            case .success(let success):
+                self.lunches = success
+            case .failure(let failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error while fetching data")
+                }
+            }
         }
     }
 
     func addButtonAction() {
         isAddingSheetPresented = true
+    }
+    
+    func joinLunch(_ lunch: Lunch) {
+        networkManager.joinLunch(
+            lunchId: lunch.id,
+            userId: Int64(authManager.userId)
+        ) { response in
+            switch response {
+            case .success:
+                break
+            case .failure(let failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error at joining lunch")
+                }
+            }
+        }
     }
     
     func saveNewLunch() {
@@ -54,10 +83,19 @@ final class HomeViewModel: ObservableObject {
         
         if let date = formatter.date(from: sheetTimeSelection) {
             networkManager.createLunch(request: CreateLunchRequest(userId: Int64(authManager.userId), place: sheetPlaceName == "" ? "Кухня" : sheetPlaceName, time: date, description: sheetNotes)) { response in
-                print(response as Any)
+                switch response {
+                case .success(let success):
+                    self.globalLogger.logInfo("Lunch \(success.lunch.id) has been created")
+                case .failure(let failure):
+                    if let description = failure.errorDescription {
+                        self.globalLogger.logError(description)
+                    } else {
+                        self.globalLogger.logError("Error while creating lunch")
+                    }
+                }
             }
         } else {
-            print("Ошибка парсинга времени")
+            self.globalLogger.logError("Time parsing error")
         }
     }
 }
