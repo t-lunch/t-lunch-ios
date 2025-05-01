@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftUI
 import Logging
+import SwiftUI
 
 private let logger = Logger(label: "com.lunches.network")
 

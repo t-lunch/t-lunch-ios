@@ -19,8 +19,7 @@ final class ProfileRedactViewModel: ObservableObject {
 
     @Published var office: String
 
-    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol, globalLogger: GlobalLogger
-) {
+    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol, globalLogger: GlobalLogger) {
         self.authManager = authManager
         self.networkManager = networkManager
         self.globalLogger = globalLogger
@@ -36,14 +35,14 @@ final class ProfileRedactViewModel: ObservableObject {
     func fetchData() {
         networkManager.getProfile(userId: Int64(authManager.userId)) { result in
             switch result {
-            case .success(let user):
+            case let .success(user):
                 self.name = user.name
                 self.surname = user.surname
                 self.tgContact = user.tg
                 self.emojiIcon = user.emoji
-                
+
                 self.office = user.office
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {
@@ -56,9 +55,9 @@ final class ProfileRedactViewModel: ObservableObject {
     func saveButtonAction() {
         networkManager.changeProfile(user: User(userId: 1, name: name, surname: surname, tg: tgContact, office: office, emoji: emojiIcon)) { response in
             switch response {
-            case .success(let success):
+            case let .success(success):
                 self.globalLogger.logInfo("User \(success.userId) changed profile")
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {

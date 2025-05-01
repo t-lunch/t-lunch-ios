@@ -33,7 +33,7 @@ final class LoginViewModel: ObservableObject {
             switch response {
             case .success:
                 self.globalLogger.logInfo("User logged in")
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {

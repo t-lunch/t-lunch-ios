@@ -27,11 +27,11 @@ final class HistoryViewModel: ObservableObject {
     func fetchData() {
         networkManager.getLunchHistory(userId: Int64(authManager.userId)) { result in
             switch result {
-            case .success(let success):
+            case let .success(success):
                 self.lunches = success.map { lunch in
                     LunchFeedback(lunch: lunch, isLiked: false)
                 }
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {

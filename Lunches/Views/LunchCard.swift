@@ -11,7 +11,7 @@ struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
     var isLiked: Binding<Bool>? = nil
-    var joinAction: () -> () = {}
+    var joinAction: () -> Void = {}
 
     var body: some View {
         ZStack {

@@ -50,9 +50,9 @@ final class SignUpViewModel: ObservableObject {
     func signInButtonAction() {
         networkManager.registration(request: RegistrationRequest(name: name, surname: surname, tg: tgContact, office: office, emoji: emoji, email: email, password: password)) { response in
             switch response {
-            case .success(let success):
+            case let .success(success):
                 self.globalLogger.logInfo("User \(success.userId) logged in")
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {

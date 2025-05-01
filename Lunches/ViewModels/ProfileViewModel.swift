@@ -10,9 +10,9 @@ import SwiftUI
 final class ProfileViewModel: ObservableObject {
     var networkManager: LunchNetworkManagerProtocol
     var authManager: AuthManager
-    
+
     let makeProfileRedactView: () -> ProfileRedactViewModel
-    
+
     @Published var errorMessage: String?
 
     @Published var name: String
@@ -38,12 +38,12 @@ final class ProfileViewModel: ObservableObject {
     func fetchData() {
         networkManager.getProfile(userId: Int64(authManager.userId)) { result in
             switch result {
-            case .success(let user):
+            case let .success(user):
                 self.name = user.name
                 self.surname = user.surname
                 self.tgContact = user.tg
                 self.emojiIcon = user.emoji
-            case .failure(let error):
+            case let .failure(error):
                 self.errorMessage = error.localizedDescription
             }
         }

@@ -5,10 +5,9 @@
 //  Created by Андрей Степанов on 28.04.2025.
 //
 
-
-import SwiftUI
 import Combine
 import Logging
+import SwiftUI
 
 final class GlobalLogger: ObservableObject {
     @Published var globalError: String?
@@ -16,7 +15,7 @@ final class GlobalLogger: ObservableObject {
     private let logger: Logger
 
     init(label: String) {
-        self.logger = Logger(label: label)
+        logger = Logger(label: label)
     }
 
     func logError(_ message: String) {

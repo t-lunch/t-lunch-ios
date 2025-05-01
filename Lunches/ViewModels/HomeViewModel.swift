@@ -41,9 +41,9 @@ final class HomeViewModel: ObservableObject {
     func fetchData() {
         networkManager.getLunches(userId: Int64(authManager.userId), offset: 0, limit: 100) { result in
             switch result {
-            case .success(let success):
+            case let .success(success):
                 self.lunches = success
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {
@@ -56,7 +56,7 @@ final class HomeViewModel: ObservableObject {
     func addButtonAction() {
         isAddingSheetPresented = true
     }
-    
+
     func joinLunch(_ lunch: Lunch) {
         networkManager.joinLunch(
             lunchId: lunch.id,
@@ -65,7 +65,7 @@ final class HomeViewModel: ObservableObject {
             switch response {
             case .success:
                 break
-            case .failure(let failure):
+            case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
                 } else {
@@ -74,19 +74,19 @@ final class HomeViewModel: ObservableObject {
             }
         }
     }
-    
+
     func saveNewLunch() {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone.current
-        
+
         if let date = formatter.date(from: sheetTimeSelection) {
             networkManager.createLunch(request: CreateLunchRequest(userId: Int64(authManager.userId), place: sheetPlaceName == "" ? "Кухня" : sheetPlaceName, time: date, description: sheetNotes)) { response in
                 switch response {
-                case .success(let success):
+                case let .success(success):
                     self.globalLogger.logInfo("Lunch \(success.lunch.id) has been created")
-                case .failure(let failure):
+                case let .failure(failure):
                     if let description = failure.errorDescription {
                         self.globalLogger.logError(description)
                     } else {
@@ -95,7 +95,7 @@ final class HomeViewModel: ObservableObject {
                 }
             }
         } else {
-            self.globalLogger.logError("Time parsing error")
+            globalLogger.logError("Time parsing error")
         }
     }
 }
