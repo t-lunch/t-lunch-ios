@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias IntId = Int64
+typealias IntId = String

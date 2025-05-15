@@ -15,7 +15,7 @@ struct Lunch: Codable, Identifiable, Equatable {
     let surname: String
     let place: String
     let time: Date
-    let numberOfParticipants: IntId
+    let numberOfParticipants: Int64
     let description: String?
     let users: [User]
 }
@@ -34,7 +34,7 @@ extension Lunch {
 }
 
 extension Lunch {
-    static let example = Lunch(id: 0,
+    static let example = Lunch(id: "0",
                                name: "Name",
                                surname: "Surname",
                                place: "Place",
@@ -42,7 +42,7 @@ extension Lunch {
                                numberOfParticipants: 12,
                                description: "descriptiondescriptiondescriptiondescriptiondescriptiondescription",
                                users: [
-                                   User(userId: 0, name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂"),
+                                   User(userId: "0", name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂"),
                                ])
 }
 

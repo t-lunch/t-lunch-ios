@@ -10,7 +10,7 @@ import SwiftUI
 
 final class AuthManager: AuthManagerProtocol {
     @Published private(set) var isAuthorized: Bool = false
-    @AppStorage("userId") private(set) var userId: Int = -1
+    @AppStorage("userId") private(set) var userId: IntId = "-1"
 
     private let userDefaults = UserDefaults.standard
     private let accessTokenKey = "accessToken"

@@ -47,7 +47,17 @@ class APIService: Service {
             }
 
             if let resp = resp as? HTTPURLResponse, 500 ..< 600 ~= resp.statusCode {
-                completion(nil, .serverError())
+                guard let data = data else {
+                    completion(nil, .serverError())
+                    return
+                }
+
+                if let errorResponse = try? JSONDecoder().decode(ServerErrorResponse.self, from: data) {
+                    completion(nil, .serverError(errorResponse.message))
+                    return
+                }
+
+                completion(nil, .invalidResponse())
                 return
             }
 
@@ -57,10 +67,8 @@ class APIService: Service {
             }
 
             do {
-                if let errorResponse = try? JSONDecoder().decode([String: String].self, from: data),
-                   let detail = errorResponse["detail"]
-                {
-                    completion(nil, .serverError(detail))
+                if let errorResponse = try? JSONDecoder().decode(ServerErrorResponse.self, from: data) {
+                    completion(nil, .serverError(errorResponse.message))
                     return
                 }
 
@@ -72,6 +80,7 @@ class APIService: Service {
                 let result = try JSONDecoder().decode(T.self, from: data)
                 completion(result, nil)
             } catch {
+                print(error)
                 completion(nil, .decodingError())
             }
         }.resume()

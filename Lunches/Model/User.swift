@@ -16,17 +16,6 @@ struct User: Codable, Equatable {
     let emoji: String
 }
 
-extension User {
-    enum CodingKeys: String, CodingKey {
-        case userId = "user_id"
-        case name
-        case surname
-        case tg
-        case office
-        case emoji
-    }
-}
-
 struct UserRequest: Codable, Equatable {
     let userId: IntId
 }

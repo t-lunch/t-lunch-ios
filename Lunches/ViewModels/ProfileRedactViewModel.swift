@@ -53,7 +53,7 @@ final class ProfileRedactViewModel: ObservableObject {
     }
 
     func saveButtonAction() {
-        networkManager.changeProfile(user: User(userId: 1, name: name, surname: surname, tg: tgContact, office: office, emoji: emojiIcon)) { response in
+        networkManager.changeProfile(user: User(userId: authManager.userId, name: name, surname: surname, tg: tgContact, office: office, emoji: emojiIcon)) { response in
             switch response {
             case let .success(success):
                 self.globalLogger.logInfo("User \(success.userId) changed profile")

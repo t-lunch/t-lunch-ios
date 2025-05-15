@@ -16,10 +16,3 @@ struct LoginResponse: Codable, Equatable {
     let accessToken: String
     let refreshToken: String
 }
-
-extension LoginResponse {
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case refreshToken = "refresh_token"
-    }
-}
