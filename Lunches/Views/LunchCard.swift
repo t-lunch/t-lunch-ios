@@ -11,7 +11,7 @@ struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
     var isLiked: Binding<Bool>? = nil
-    var joinAction: () -> () = {}
+    var joinAction: () -> Void = {}
 
     var body: some View {
         ZStack {
@@ -39,7 +39,7 @@ struct LunchCard: View {
                 }
                 LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-                LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
+                LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
 
                 if isAvailable {
                     Button {
@@ -80,7 +80,7 @@ struct LunchCardLabel: View {
 }
 
 /// cклоняет слово 'участника'
-func uchastnika(_ n: Int) -> String {
+func inflectParticipant(_ n: Int) -> String {
     switch n % 10 {
     case 1:
         "\(n) участник"

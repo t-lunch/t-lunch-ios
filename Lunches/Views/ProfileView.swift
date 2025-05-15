@@ -8,15 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject var viewModel: ProfileViewModel
-    var authManager: AuthManager
-    var networkManager: LunchNetworkManagerProtocol
-
-    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
-        self.authManager = authManager
-        self.networkManager = networkManager
-        _viewModel = StateObject(wrappedValue: ProfileViewModel(authManager: authManager, networkManager: networkManager))
-    }
+    @ObservedObject var viewModel: ProfileViewModel
 
     var body: some View {
         NavigationStack {
@@ -57,19 +49,21 @@ struct ProfileView: View {
             .onAppear {
                 viewModel.fetchData()
             }
-            .toolbar {
+            .alert(item: $viewModel.errorMessage) { errorMessage in
+                Alert(title: Text("Ошибка"), message: Text(errorMessage), dismissButton: .default(Text("Ок")))
+            }
+            .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink("Редактировать") {
-                        ProfileRedactView(authManager: authManager,
-                                          networkManager: networkManager)
+                        ProfileRedactView(viewModel: viewModel.makeProfileRedactView())
                     }
                 }
-            }
+            })
             .navigationTitle("Профиль")
         }
     }
 }
 
 #Preview {
-    ProfileView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
+    ProfileView(viewModel: ViewModelFactory.previewContent.makeProfileViewModel())
 }

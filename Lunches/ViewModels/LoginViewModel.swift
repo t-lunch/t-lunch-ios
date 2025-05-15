@@ -9,14 +9,18 @@ import SwiftUI
 
 final class LoginViewModel: ObservableObject {
     let networkManager: LunchNetworkManagerProtocol
+    let globalLogger: GlobalLogger
+    let makeSignUpViewModel: () -> SignUpViewModel
 
     @Published var email: String
     @Published var password: String
 
     @Published var isPasswordFieldSecured: Bool
 
-    init(networkManager: LunchNetworkManagerProtocol) {
+    init(networkManager: LunchNetworkManagerProtocol, globalLogger: GlobalLogger, makeSignUpViewModel: @escaping () -> SignUpViewModel) {
         self.networkManager = networkManager
+        self.globalLogger = globalLogger
+        self.makeSignUpViewModel = makeSignUpViewModel
 
         email = ""
         password = ""
@@ -25,6 +29,17 @@ final class LoginViewModel: ObservableObject {
     }
 
     func loginButtonAction() {
-        networkManager.login(request: LoginRequest(email: email, password: password)) { _ in }
+        networkManager.login(request: LoginRequest(email: email, password: password)) { response in
+            switch response {
+            case .success:
+                self.globalLogger.logInfo("User logged in")
+            case let .failure(failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error at signing-up")
+                }
+            }
+        }
     }
 }

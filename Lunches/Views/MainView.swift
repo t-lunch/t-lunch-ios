@@ -8,25 +8,21 @@
 import SwiftUI
 
 struct MainView: View {
-    var authManager: AuthManager
-    var networkManager: LunchNetworkManagerProtocol
+    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         TabView {
-            HomeView(authManager: authManager,
-                     networkManager: networkManager)
+            HomeView(viewModel: viewModel.makeHomeViewModel())
                 .tabItem {
                     Image(systemName: "house")
                     Text("Главная")
                 }
-            HistoryView(authManager: authManager,
-                        networkManager: networkManager)
+            HistoryView(viewModel: viewModel.makeHistoryViewModel())
                 .tabItem {
                     Image(systemName: "clock")
                     Text("История")
                 }
-            ProfileView(authManager: authManager,
-                        networkManager: networkManager)
+            ProfileView(viewModel: viewModel.makeProfileViewModel())
                 .tabItem {
                     Image(systemName: "person")
                     Text("Профиль")

@@ -8,16 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject var viewModel: HomeViewModel
-
-    var authManager: AuthManager
-    var networkManager: LunchNetworkManagerProtocol
-
-    init(authManager: AuthManager, networkManager: LunchNetworkManagerProtocol) {
-        self.authManager = authManager
-        self.networkManager = networkManager
-        _viewModel = StateObject(wrappedValue: HomeViewModel(authManager: authManager, networkManager: networkManager))
-    }
+    @ObservedObject var viewModel: HomeViewModel
 
     var body: some View {
         NavigationStack {
@@ -25,9 +16,7 @@ struct HomeView: View {
                 VStack(spacing: 24) {
                     ForEach(viewModel.lunches) { lunch in
                         LunchCard(lunch: lunch, isAvailable: true, joinAction: {
-                            networkManager.joinLunch(lunchId: lunch.id, userId: Int64(authManager.userId)) { response in
-                                print(response as Any)
-                            }
+                            viewModel.joinLunch(lunch)
                         })
                         .onTapGesture {
                             viewModel.selectedLunch = lunch
@@ -127,7 +116,7 @@ struct DetailView: View {
         VStack(alignment: .leading) {
             LunchCardLabel(title: lunch.name, image: "mappin")
             LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-            LunchCardLabel(title: uchastnika(Int(lunch.numberOfParticipants)), image: "person.2")
+            LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
         }
     }
 
@@ -144,5 +133,5 @@ struct DetailView: View {
 }
 
 #Preview {
-    HomeView(authManager: AuthManager(), networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
+    HomeView(viewModel: ViewModelFactory.previewContent.makeHomeViewModel())
 }

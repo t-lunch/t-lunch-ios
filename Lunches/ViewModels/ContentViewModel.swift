@@ -5,16 +5,43 @@
 //  Created by Андрей Степанов on 17.04.2025.
 //
 
+import Combine
 import SwiftUI
 
 class ContentViewModel: ObservableObject {
-    @ObservedObject var authManager: AuthManager
+    @ObservedObject private var authManager: AuthManager
+    @ObservedObject private var globalLogger: GlobalLogger
 
-    init(authManager: AuthManager) {
+    let makeMainViewModel: () -> MainViewModel
+    let makeLoginViewModel: () -> LoginViewModel
+
+    @Published var globalError: String? = nil
+    @Published var isAuthorized: Bool = false
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init(
+        authManager: AuthManager,
+        globalLogger: GlobalLogger,
+        makeMainViewModel: @escaping () -> MainViewModel,
+        makeLoginViewModel: @escaping () -> LoginViewModel
+    ) {
         self.authManager = authManager
+        self.globalLogger = globalLogger
+        self.makeMainViewModel = makeMainViewModel
+        self.makeLoginViewModel = makeLoginViewModel
+
+        globalLogger.$globalError
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$globalError)
+
+        authManager.$isAuthorized
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.isAuthorized, on: self)
+            .store(in: &cancellables)
     }
 
-    var isAuthorized: Bool {
-        authManager.isAuthorized
+    func clearError() {
+        globalLogger.clearError()
     }
 }

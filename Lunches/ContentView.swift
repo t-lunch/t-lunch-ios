@@ -8,28 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel: ContentViewModel
-    @ObservedObject var authManager: AuthManager
-    var networkManager: LunchNetworkManagerProtocol
-
-    init(appCoordinator: AppCoordinator) {
-        authManager = appCoordinator.authManager
-        networkManager = appCoordinator.networkManager
-        _viewModel = StateObject(wrappedValue: ContentViewModel(authManager: appCoordinator.authManager))
-    }
+    @ObservedObject var viewModel: ContentViewModel
 
     var body: some View {
         Group {
-            if !viewModel.isAuthorized {
-                LoginView(networkManager: networkManager)
+            if viewModel.isAuthorized {
+                MainView(viewModel: viewModel.makeMainViewModel())
             } else {
-                MainView(authManager: authManager,
-                         networkManager: networkManager)
+                LoginView(viewModel: viewModel.makeLoginViewModel())
             }
+        }
+        .alert(item: $viewModel.globalError) { errorMessage in
+            Alert(
+                title: Text("Ошибка"),
+                message: Text(errorMessage),
+                dismissButton: .default(Text("Ок")) {
+                    viewModel.clearError()
+                }
+            )
         }
     }
 }
 
 #Preview {
-    ContentView(appCoordinator: AppCoordinator())
+    ContentView(viewModel: ViewModelFactory.previewContent.makeContentViewModel())
 }

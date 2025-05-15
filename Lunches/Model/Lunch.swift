@@ -10,12 +10,12 @@ import Foundation
 // MARK: - Lunch
 
 struct Lunch: Codable, Identifiable, Equatable {
-    let id: Int64
+    let id: IntId
     let name: String
     let surname: String
     let place: String
     let time: Date
-    let numberOfParticipants: Int64
+    let numberOfParticipants: IntId
     let description: String?
     let users: [User]
 }
@@ -63,7 +63,7 @@ extension LunchFeedback {
 // MARK: - LunchRequest
 
 struct LunchRequest: Codable, Equatable {
-    let userId: Int64
+    let userId: IntId
     let offset: Int32
     let limit: Int32
 }
@@ -80,7 +80,7 @@ extension LunchRequest {
 
 struct GetLunchesResponse: Codable, Equatable {
     let lunches: [Lunch]
-    let lunchId: Int64?
+    let lunchId: IntId?
 }
 
 extension GetLunchesResponse {
@@ -93,7 +93,7 @@ extension GetLunchesResponse {
 // MARK: - CreateLunchRequest
 
 struct CreateLunchRequest: Codable, Equatable {
-    let userId: Int64
+    let userId: IntId
     let place: String
     let time: Date
     let description: String
@@ -117,8 +117,8 @@ struct LunchResponse: Codable, Equatable {
 // MARK: - ActionLunchRequest
 
 struct ActionLunchRequest: Codable, Equatable {
-    let lunchId: Int64
-    let userId: Int64
+    let lunchId: IntId
+    let userId: IntId
 }
 
 extension ActionLunchRequest {
@@ -131,7 +131,7 @@ extension ActionLunchRequest {
 // MARK: - DetailLunchRequest
 
 struct DetailLunchRequest: Codable, Equatable {
-    let lunchId: Int64
+    let lunchId: IntId
 }
 
 extension DetailLunchRequest {
@@ -149,8 +149,8 @@ struct LunchHistoryResponse: Codable, Equatable {
 // MARK: - RateLunchRequest
 
 struct RateLunchRequest: Codable, Equatable {
-    let userId: Int64
-    let lunchId: Int64
+    let userId: IntId
+    let lunchId: IntId
     let isLiked: Bool
 }
 

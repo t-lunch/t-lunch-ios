@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @StateObject var viewModel: SignUpViewModel
-    var networkManager: LunchNetworkManagerProtocol
-
-    init(networkManager: LunchNetworkManagerProtocol) {
-        self.networkManager = networkManager
-        _viewModel = StateObject(wrappedValue: SignUpViewModel(networkManager: networkManager))
-    }
+    @ObservedObject var viewModel: SignUpViewModel
 
     var body: some View {
         NavigationStack {
@@ -46,7 +40,7 @@ struct SignUpView: View {
                     Text("Уже зарегистрированы?")
                         .fontWeight(.light)
                     NavigationLink {
-                        LoginView(networkManager: networkManager)
+                        LoginView(viewModel: viewModel.makeLoginViewModel())
                     } label: {
                         Text("Войти")
                             .bold()
@@ -63,5 +57,5 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView(networkManager: FakeLunchNetworkManager(authManager: AuthManager()))
+    SignUpView(viewModel: ViewModelFactory.previewContent.makeSignUpViewModel())
 }
