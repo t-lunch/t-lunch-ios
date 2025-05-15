@@ -8,7 +8,7 @@
 import Foundation
 
 struct User: Codable, Equatable {
-    let userId: Int64
+    let userId: IntId
     let name: String
     let surname: String
     let tg: String
@@ -28,5 +28,5 @@ extension User {
 }
 
 struct UserRequest: Codable, Equatable {
-    let userId: Int64
+    let userId: IntId
 }

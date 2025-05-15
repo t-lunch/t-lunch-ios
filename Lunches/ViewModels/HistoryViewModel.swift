@@ -25,7 +25,7 @@ final class HistoryViewModel: ObservableObject {
     }
 
     func fetchData() {
-        networkManager.getLunchHistory(userId: Int64(authManager.userId)) { result in
+        networkManager.getLunchHistory(userId: IntId(authManager.userId)) { result in
             switch result {
             case let .success(success):
                 self.lunches = success.map { lunch in

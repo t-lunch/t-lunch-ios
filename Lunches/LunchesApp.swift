@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct LunchesApp: App {
-    var viewModelFactory: ViewModelFactory = .makePreview()
+    private var viewModelFactory: ViewModelFactory = .makePreview()
 
     var body: some Scene {
         WindowGroup {

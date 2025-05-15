@@ -39,7 +39,7 @@ final class HomeViewModel: ObservableObject {
     }
 
     func fetchData() {
-        networkManager.getLunches(userId: Int64(authManager.userId), offset: 0, limit: 100) { result in
+        networkManager.getLunches(userId: IntId(authManager.userId), offset: 0, limit: 100) { result in
             switch result {
             case let .success(success):
                 self.lunches = success
@@ -60,7 +60,7 @@ final class HomeViewModel: ObservableObject {
     func joinLunch(_ lunch: Lunch) {
         networkManager.joinLunch(
             lunchId: lunch.id,
-            userId: Int64(authManager.userId)
+            userId: IntId(authManager.userId)
         ) { response in
             switch response {
             case .success:
@@ -82,7 +82,7 @@ final class HomeViewModel: ObservableObject {
         formatter.timeZone = TimeZone.current
 
         if let date = formatter.date(from: sheetTimeSelection) {
-            networkManager.createLunch(request: CreateLunchRequest(userId: Int64(authManager.userId), place: sheetPlaceName == "" ? "Кухня" : sheetPlaceName, time: date, description: sheetNotes)) { response in
+            networkManager.createLunch(request: CreateLunchRequest(userId: IntId(authManager.userId), place: sheetPlaceName == "" ? "Кухня" : sheetPlaceName, time: date, description: sheetNotes)) { response in
                 switch response {
                 case let .success(success):
                     self.globalLogger.logInfo("Lunch \(success.lunch.id) has been created")

@@ -36,7 +36,7 @@ final class ProfileViewModel: ObservableObject {
     }
 
     func fetchData() {
-        networkManager.getProfile(userId: Int64(authManager.userId)) { result in
+        networkManager.getProfile(userId: IntId(authManager.userId)) { result in
             switch result {
             case let .success(user):
                 self.name = user.name

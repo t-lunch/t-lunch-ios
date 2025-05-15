@@ -85,7 +85,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func getProfile(userId: Int64, completion: @escaping (Result<User, APIError>) -> Void) {
+    func getProfile(userId: IntId, completion: @escaping (Result<User, APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.getProfile(userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getProfile")))
             return
@@ -127,7 +127,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func getLunches(userId: Int64, offset: Int32, limit: Int32, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
+    func getLunches(userId: IntId, offset: Int32, limit: Int32, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.getLunches(userId: userId, offset: offset, limit: limit).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getLunches")))
             return
@@ -169,7 +169,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func joinLunch(lunchId: Int64, userId: Int64, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
+    func joinLunch(lunchId: IntId, userId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.joinLunch(lunchId: lunchId, userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for joinLunch")))
             return
@@ -190,7 +190,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func leaveLunch(lunchId: Int64, userId: Int64, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
+    func leaveLunch(lunchId: IntId, userId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.leaveLunch(lunchId: lunchId, userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for leaveLunch")))
             return
@@ -211,7 +211,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func getDetailLunch(lunchId: Int64, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
+    func getDetailLunch(lunchId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.getDetailLunch(lunchId: lunchId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getDetailLunch")))
             return
@@ -232,7 +232,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func getLunchHistory(userId: Int64, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
+    func getLunchHistory(userId: IntId, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.getLunchHistory(userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getLunchHistory")))
             return
@@ -253,7 +253,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func rateLunch(userId: Int64, lunchId: Int64, isLiked: Bool, completion: @escaping (Result<LunchFeedback, APIError>) -> Void) {
+    func rateLunch(userId: IntId, lunchId: IntId, isLiked: Bool, completion: @escaping (Result<LunchFeedback, APIError>) -> Void) {
         guard let urlRequest = LunchEndpoint.rateLunch(userId: userId, lunchId: lunchId, isLiked: isLiked).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for rateLunch")))
             return

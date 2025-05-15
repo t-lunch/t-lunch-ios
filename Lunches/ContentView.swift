@@ -12,10 +12,10 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if !viewModel.isAuthorized {
-                LoginView(viewModel: viewModel.makeLoginViewModel())
-            } else {
+            if viewModel.isAuthorized {
                 MainView(viewModel: viewModel.makeMainViewModel())
+            } else {
+                LoginView(viewModel: viewModel.makeLoginViewModel())
             }
         }
         .alert(item: $viewModel.globalError) { errorMessage in

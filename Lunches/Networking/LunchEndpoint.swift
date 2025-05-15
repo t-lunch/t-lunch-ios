@@ -11,15 +11,15 @@ enum LunchEndpoint {
     case registration(url: String = "/v1/signup", request: RegistrationRequest)
     case login(url: String = "/v1/signin", request: LoginRequest)
     case refresh(url: String = "/v1/refresh", token: String)
-    case getProfile(url: String = "/v1/profile", userId: Int64)
+    case getProfile(url: String = "/v1/profile", userId: IntId)
     case changeProfile(url: String = "/v1/profile", user: User)
-    case getLunches(url: String = "/v1/lunches", userId: Int64, offset: Int32, limit: Int32)
+    case getLunches(url: String = "/v1/lunches", userId: IntId, offset: Int32, limit: Int32)
     case createLunch(url: String = "/v1/lunch", request: CreateLunchRequest)
-    case joinLunch(url: String = "/v1/lunch", lunchId: Int64, userId: Int64)
-    case leaveLunch(url: String = "/v1/lunch", lunchId: Int64, userId: Int64)
-    case getDetailLunch(url: String = "/v1/lunch", lunchId: Int64)
-    case getLunchHistory(url: String = "/v1/lunch", userId: Int64)
-    case rateLunch(url: String = "/v1/lunch", userId: Int64, lunchId: Int64, isLiked: Bool)
+    case joinLunch(url: String = "/v1/lunch", lunchId: IntId, userId: IntId)
+    case leaveLunch(url: String = "/v1/lunch", lunchId: IntId, userId: IntId)
+    case getDetailLunch(url: String = "/v1/lunch", lunchId: IntId)
+    case getLunchHistory(url: String = "/v1/lunch", userId: IntId)
+    case rateLunch(url: String = "/v1/lunch", userId: IntId, lunchId: IntId, isLiked: Bool)
 
     var request: URLRequest? {
         guard let url = url else { return nil }
