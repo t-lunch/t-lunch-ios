@@ -15,7 +15,7 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func registration(request: RegistrationRequest, completion: @escaping (Result<User, APIError>) -> Void) {
-        let user = User(userId: 1, name: request.name, surname: request.surname, tg: request.tg, office: request.office, emoji: request.emoji)
+        let user = User(userId: "1", name: request.name, surname: request.surname, tg: request.tg, office: request.office, emoji: request.emoji)
         authManager.setIsAuthorized(to: true)
         completion(.success(user))
     }
@@ -42,12 +42,12 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getLunches(userId _: IntId, offset _: Int32, limit _: Int32, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        let lunch = Lunch(id: 1, name: "Анна", surname: "Петрова", place: "Кафе 'Еда'", time: Date(), numberOfParticipants: 3, description: "Обед всей командой", users: [])
+        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: "Кафе 'Еда'", time: Date(), numberOfParticipants: 3, description: "Обед всей командой", users: [])
         completion(.success([lunch]))
     }
 
     func createLunch(request: CreateLunchRequest, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        let lunch = Lunch(id: 1, name: "Анна", surname: "Петрова", place: request.place, time: Date(), numberOfParticipants: 1, description: request.description, users: [])
+        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: request.place, time: Date(), numberOfParticipants: 1, description: request.description, users: [])
         completion(.success(LunchResponse(lunch: lunch)))
     }
 
@@ -67,7 +67,7 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getLunchHistory(userId _: IntId, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        let lunch = Lunch(id: 42, name: "Игорь", surname: "К", place: "Пельменная", time: Date(), numberOfParticipants: 5, description: "История обедов", users: [])
+        let lunch = Lunch(id: "42", name: "Игорь", surname: "К", place: "Пельменная", time: Date(), numberOfParticipants: 5, description: "История обедов", users: [])
         completion(.success([lunch]))
     }
 

@@ -16,17 +16,21 @@ struct SignUpView: View {
                 Rectangle()
                     .fill(.clear)
                     .frame(height: 90)
-                VStack {
-                    Text("Регистрация")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding()
-                    LunchTextField(prompt: "Ваш e-mail", text: $viewModel.email, title: "Логин")
-                    LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
-                        .padding(.bottom, 20)
-                    LunchTextField(prompt: "Ваше имя", text: $viewModel.name, title: "Имя")
-                    LunchTextField(prompt: "Ваша фамилия", text: $viewModel.surname, title: "Фамилия")
-                    LunchTextField(prompt: "Ваш ник в телеграм", text: $viewModel.tgContact, title: "ТГ-контакт")
+                ScrollView {
+                    VStack {
+                        Text("Регистрация")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .padding()
+                        LunchTextField(prompt: "Ваш e-mail", text: $viewModel.email, title: "Логин")
+                        LunchTextField(text: $viewModel.password, title: "Пароль", isSecured: $viewModel.isPasswordFieldSecured)
+                            .padding(.bottom, 20)
+                        LunchTextField(prompt: "Ваше имя", text: $viewModel.name, title: "Имя")
+                        LunchTextField(prompt: "Ваша фамилия", text: $viewModel.surname, title: "Фамилия")
+                        LunchTextField(prompt: "Ваш ник в телеграм", text: $viewModel.tgContact, title: "ТГ-контакт")
+                        LunchTextField(prompt: "Ваш эмодзи-аватар", text: $viewModel.emoji, title: "Эмодзи-аватар")
+                        LunchTextField(prompt: "Ваш офис", text: $viewModel.office, title: "Офис")
+                    }
                 }
 
                 Spacer()
