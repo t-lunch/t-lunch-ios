@@ -28,6 +28,10 @@ final class AuthManager: AuthManagerProtocol {
         isAuthorized = accessToken != nil
     }
 
+    func setUserId(to userId: IntId) {
+        self.userId = userId
+    }
+
     func saveTokens(access: String, refresh: String) {
         userDefaults.set(access, forKey: accessTokenKey)
         userDefaults.set(refresh, forKey: refreshTokenKey)

@@ -20,7 +20,7 @@ protocol LunchNetworkManagerProtocol {
     func leaveLunch(lunchId: IntId, userId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void)
 
     func getDetailLunch(lunchId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void)
-    func getLunchHistory(userId: IntId, completion: @escaping (Result<[Lunch], APIError>) -> Void)
+    func getLunchHistory(userId: IntId, completion: @escaping (Result<[LunchFeedback], APIError>) -> Void)
 
     func rateLunch(userId: IntId, lunchId: IntId, isLiked: Bool, completion: @escaping (Result<LunchFeedback, APIError>) -> Void)
 }

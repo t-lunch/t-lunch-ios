@@ -28,8 +28,8 @@ final class HistoryViewModel: ObservableObject {
         networkManager.getLunchHistory(userId: IntId(authManager.userId)) { result in
             switch result {
             case let .success(success):
-                self.lunches = success.map { lunch in
-                    LunchFeedback(lunch: lunch, isLiked: false)
+                DispatchQueue.main.async {
+                    self.lunches = success
                 }
             case let .failure(failure):
                 if let description = failure.errorDescription {

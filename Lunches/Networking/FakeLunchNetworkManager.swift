@@ -21,7 +21,7 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func login(request _: LoginRequest, completion: @escaping (Result<LoginResponse, APIError>) -> Void) {
-        let response = LoginResponse(accessToken: "fakeAccessToken", refreshToken: "fakeRefreshToken")
+        let response = LoginResponse(accessToken: "fakeAccessToken", refreshToken: "fakeRefreshToken", userId: "1")
         authManager.setIsAuthorized(to: true)
         completion(.success(response))
     }
@@ -42,37 +42,38 @@ final class FakeLunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getLunches(userId _: IntId, offset _: Int32, limit _: Int32, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: "Кафе 'Еда'", time: Date(), numberOfParticipants: 3, description: "Обед всей командой", users: [])
+        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: "Кафе 'Еда'", time: Date(), numberOfParticipants: "3", description: "Обед всей командой", usersId: [])
         completion(.success([lunch]))
     }
 
     func createLunch(request: CreateLunchRequest, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: request.place, time: Date(), numberOfParticipants: 1, description: request.description, users: [])
+        let lunch = Lunch(id: "1", name: "Анна", surname: "Петрова", place: request.place, time: Date(), numberOfParticipants: "1", description: request.description, usersId: [])
         completion(.success(LunchResponse(lunch: lunch)))
     }
 
     func joinLunch(lunchId: IntId, userId _: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 4, description: "Обед", users: [])
+        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: "4", description: "Обед", usersId: [])
         completion(.success(LunchResponse(lunch: lunch)))
     }
 
     func leaveLunch(lunchId: IntId, userId _: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 2, description: "Обед", users: [])
+        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: "2", description: "Обед", usersId: [])
         completion(.success(LunchResponse(lunch: lunch)))
     }
 
     func getDetailLunch(lunchId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 3, description: "Детали обеда", users: [])
+        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: "3", description: "Детали обеда", usersId: [])
         completion(.success(LunchResponse(lunch: lunch)))
     }
 
-    func getLunchHistory(userId _: IntId, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        let lunch = Lunch(id: "42", name: "Игорь", surname: "К", place: "Пельменная", time: Date(), numberOfParticipants: 5, description: "История обедов", users: [])
-        completion(.success([lunch]))
+    func getLunchHistory(userId _: IntId, completion: @escaping (Result<[LunchFeedback], APIError>) -> Void) {
+        let lunch = Lunch(id: "42", name: "Игорь", surname: "К", place: "Пельменная", time: Date(), numberOfParticipants: "5", description: "История обедов", usersId: [])
+        let lunchFeedback = LunchFeedback(lunch: lunch, isLiked: true)
+        completion(.success([lunchFeedback]))
     }
 
     func rateLunch(userId _: IntId, lunchId: IntId, isLiked: Bool, completion: @escaping (Result<LunchFeedback, APIError>) -> Void) {
-        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: 3, description: nil, users: [])
+        let lunch = Lunch(id: lunchId, name: "Анна", surname: "Петрова", place: "Кафе", time: Date(), numberOfParticipants: "3", description: nil, usersId: [])
         let feedback = LunchFeedback(lunch: lunch, isLiked: isLiked)
         completion(.success(feedback))
     }

@@ -15,4 +15,5 @@ struct LoginRequest: Codable, Equatable {
 struct LoginResponse: Codable, Equatable {
     let accessToken: String
     let refreshToken: String
+    let userId: IntId
 }

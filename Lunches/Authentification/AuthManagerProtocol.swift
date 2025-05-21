@@ -12,6 +12,7 @@ protocol AuthManagerProtocol: ObservableObject {
     var refreshToken: String? { get }
     var isAuthorized: Bool { get }
 
+    func setUserId(to userId: IntId)
     func saveTokens(access: String, refresh: String)
     func clearTokens()
 

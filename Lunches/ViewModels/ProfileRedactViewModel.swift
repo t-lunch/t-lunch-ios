@@ -36,12 +36,14 @@ final class ProfileRedactViewModel: ObservableObject {
         networkManager.getProfile(userId: IntId(authManager.userId)) { result in
             switch result {
             case let .success(user):
-                self.name = user.name
-                self.surname = user.surname
-                self.tgContact = user.tg
-                self.emojiIcon = user.emoji
+                DispatchQueue.main.async {
+                    self.name = user.name
+                    self.surname = user.surname
+                    self.tgContact = user.tg
+                    self.emojiIcon = user.emoji
 
-                self.office = user.office
+                    self.office = user.office
+                }
             case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)

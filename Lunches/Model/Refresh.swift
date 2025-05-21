@@ -9,20 +9,9 @@ import Foundation
 
 struct RefreshRequest: Codable, Equatable {
     let refreshToken: String
+    let userId: IntId
 }
 
 struct RefreshResponse: Codable, Equatable {
     let accessToken: String
-}
-
-extension RefreshRequest {
-    enum CodingKeys: String, CodingKey {
-        case refreshToken = "refresh_token"
-    }
-}
-
-extension RefreshResponse {
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-    }
 }

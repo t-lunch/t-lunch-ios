@@ -39,7 +39,7 @@ struct LunchCard: View {
                 }
                 LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-                LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
+                LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants) ?? 0), image: "person.2")
 
                 if isAvailable {
                     Button {

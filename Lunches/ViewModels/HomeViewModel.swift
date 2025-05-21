@@ -15,6 +15,7 @@ final class HomeViewModel: ObservableObject {
     @Published var searchText: String
 
     @Published var lunches: [Lunch]
+    @Published var participants: [User] = []
     @Published var selectedLunch: Lunch?
 
     @Published var isAddingSheetPresented: Bool
@@ -42,7 +43,9 @@ final class HomeViewModel: ObservableObject {
         networkManager.getLunches(userId: IntId(authManager.userId), offset: 0, limit: 100) { result in
             switch result {
             case let .success(success):
-                self.lunches = success
+                DispatchQueue.main.async {
+                    self.lunches = success
+                }
             case let .failure(failure):
                 if let description = failure.errorDescription {
                     self.globalLogger.logError(description)
@@ -51,6 +54,30 @@ final class HomeViewModel: ObservableObject {
                 }
             }
         }
+    }
+
+    func fetchParticipants(for lunch: Lunch) {
+        participants = []
+        for userId in lunch.usersId {
+            networkManager.getProfile(userId: userId) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case let .success(user):
+                        self?.participants.append(user)
+                    case let .failure(failure):
+                        if let description = failure.errorDescription {
+                            self?.globalLogger.logError(description)
+                        } else {
+                            self?.globalLogger.logError("Error while fetching users")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func verifyAttendance(to lunch: Lunch) -> Bool {
+        return lunch.usersId.contains(authManager.userId)
     }
 
     func addButtonAction() {
@@ -73,6 +100,7 @@ final class HomeViewModel: ObservableObject {
                 }
             }
         }
+        fetchData()
     }
 
     func saveNewLunch() {
@@ -97,5 +125,6 @@ final class HomeViewModel: ObservableObject {
         } else {
             globalLogger.logError("Time parsing error")
         }
+        fetchData()
     }
 }

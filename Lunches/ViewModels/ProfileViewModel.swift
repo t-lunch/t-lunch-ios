@@ -37,14 +37,16 @@ final class ProfileViewModel: ObservableObject {
 
     func fetchData() {
         networkManager.getProfile(userId: IntId(authManager.userId)) { result in
-            switch result {
-            case let .success(user):
-                self.name = user.name
-                self.surname = user.surname
-                self.tgContact = user.tg
-                self.emojiIcon = user.emoji
-            case let .failure(error):
-                self.errorMessage = error.localizedDescription
+            DispatchQueue.main.async {
+                switch result {
+                case let .success(user):
+                    self.name = user.name
+                    self.surname = user.surname
+                    self.tgContact = user.tg
+                    self.emojiIcon = user.emoji
+                case let .failure(error):
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }
     }

@@ -37,7 +37,15 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
                 completion(.failure(.invalidResponse("No data received")))
                 return
             }
-            completion(.success(response))
+            self.authManager.setUserId(to: response.userId)
+            login(request: LoginRequest(email: request.email, password: request.password)) { loginresponse in
+                switch loginresponse {
+                case .success:
+                    completion(.success(response))
+                case let .failure(failure):
+                    completion(.failure(failure))
+                }
+            }
         }
     }
 
@@ -59,6 +67,7 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
                 return
             }
             self.authManager.saveTokens(access: response.accessToken, refresh: response.refreshToken)
+            self.authManager.setUserId(to: response.userId)
             completion(.success(response))
         }
     }
@@ -86,9 +95,12 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getProfile(userId: IntId, completion: @escaping (Result<User, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.getProfile(userId: userId).request else {
+        guard var urlRequest = LunchEndpoint.getProfile(userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getProfile")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: User.self) { response, error in
@@ -107,9 +119,12 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func changeProfile(user: User, completion: @escaping (Result<User, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.changeProfile(user: user).request else {
+        guard var urlRequest = LunchEndpoint.changeProfile(user: user).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for changeProfile")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: User.self) { response, error in
@@ -128,12 +143,15 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getLunches(userId: IntId, offset: Int32, limit: Int32, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.getLunches(userId: userId, offset: offset, limit: limit).request else {
+        guard var urlRequest = LunchEndpoint.getLunches(userId: userId, offset: offset, limit: limit).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getLunches")))
             return
         }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
+        }
 
-        service.makeRequest(with: urlRequest, respModel: [Lunch].self) { response, error in
+        service.makeRequest(with: urlRequest, respModel: getLunchesResponse.self) { response, error in
             if let error = error {
                 logger.error("Network request failed: \(error.localizedDescription)")
                 completion(.failure(.urlSessionError(error.localizedDescription)))
@@ -144,14 +162,17 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
                 completion(.failure(.invalidResponse("No data received")))
                 return
             }
-            completion(.success(response))
+            completion(.success(response.lunches))
         }
     }
 
     func createLunch(request: CreateLunchRequest, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.createLunch(request: request).request else {
+        guard var urlRequest = LunchEndpoint.createLunch(request: request).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for createLunch")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
@@ -170,9 +191,12 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func joinLunch(lunchId: IntId, userId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.joinLunch(lunchId: lunchId, userId: userId).request else {
+        guard var urlRequest = LunchEndpoint.joinLunch(lunchId: lunchId, userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for joinLunch")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
@@ -191,9 +215,12 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func leaveLunch(lunchId: IntId, userId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.leaveLunch(lunchId: lunchId, userId: userId).request else {
+        guard var urlRequest = LunchEndpoint.leaveLunch(lunchId: lunchId, userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for leaveLunch")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
@@ -212,9 +239,12 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
     }
 
     func getDetailLunch(lunchId: IntId, completion: @escaping (Result<LunchResponse, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.getDetailLunch(lunchId: lunchId).request else {
+        guard var urlRequest = LunchEndpoint.getDetailLunch(lunchId: lunchId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getDetailLunch")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: LunchResponse.self) { response, error in
@@ -232,13 +262,16 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
         }
     }
 
-    func getLunchHistory(userId: IntId, completion: @escaping (Result<[Lunch], APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.getLunchHistory(userId: userId).request else {
+    func getLunchHistory(userId: IntId, completion: @escaping (Result<[LunchFeedback], APIError>) -> Void) {
+        guard var urlRequest = LunchEndpoint.getLunchHistory(userId: userId).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for getLunchHistory")))
             return
         }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
+        }
 
-        service.makeRequest(with: urlRequest, respModel: [Lunch].self) { response, error in
+        service.makeRequest(with: urlRequest, respModel: LunchHistoryResponse.self) { response, error in
             if let error = error {
                 logger.error("Network request failed: \(error.localizedDescription)")
                 completion(.failure(.urlSessionError(error.localizedDescription)))
@@ -249,14 +282,17 @@ struct LunchNetworkManager: LunchNetworkManagerProtocol {
                 completion(.failure(.invalidResponse("No data received")))
                 return
             }
-            completion(.success(response))
+            completion(.success(response.lunches))
         }
     }
 
     func rateLunch(userId: IntId, lunchId: IntId, isLiked: Bool, completion: @escaping (Result<LunchFeedback, APIError>) -> Void) {
-        guard let urlRequest = LunchEndpoint.rateLunch(userId: userId, lunchId: lunchId, isLiked: isLiked).request else {
+        guard var urlRequest = LunchEndpoint.rateLunch(userId: userId, lunchId: lunchId, isLiked: isLiked).request else {
             completion(.failure(.invalidResponse("Invalid URLRequest for rateLunch")))
             return
+        }
+        if let token = authManager.accessToken {
+            urlRequest.authorize(with: token)
         }
 
         service.makeRequest(with: urlRequest, respModel: LunchFeedback.self) { response, error in

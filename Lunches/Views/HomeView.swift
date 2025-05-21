@@ -15,7 +15,7 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach(viewModel.lunches) { lunch in
-                        LunchCard(lunch: lunch, isAvailable: true, joinAction: {
+                        LunchCard(lunch: lunch, isAvailable: !viewModel.verifyAttendance(to: lunch), joinAction: {
                             viewModel.joinLunch(lunch)
                         })
                         .onTapGesture {
@@ -40,7 +40,7 @@ struct HomeView: View {
             .sheet(item: $viewModel.selectedLunch, onDismiss: {
                 viewModel.selectedLunch = nil
             }) { lunch in
-                DetailView(lunch: lunch)
+                DetailView(lunch: lunch, viewModel: viewModel)
                     .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $viewModel.isAddingSheetPresented, onDismiss: {
@@ -51,11 +51,15 @@ struct HomeView: View {
             }
             .navigationTitle("Главная")
         }
+        .refreshable {
+            viewModel.fetchData()
+        }
     }
 }
 
 struct DetailView: View {
     let lunch: Lunch
+    @ObservedObject var viewModel: HomeViewModel
     @State var isAvailable: Bool = true
     @Environment(\.dismiss) private var dismiss
 
@@ -71,11 +75,14 @@ struct DetailView: View {
             Spacer()
         }
         .padding()
+        .onAppear {
+            viewModel.fetchParticipants(for: lunch)
+        }
     }
 
     var participantsSection: some View {
         Section {
-            ForEach(lunch.users, id: \.userId) { participant in
+            ForEach(viewModel.participants, id: \.userId) { participant in
                 HStack {
                     Text(participant.name)
 
@@ -116,7 +123,7 @@ struct DetailView: View {
         VStack(alignment: .leading) {
             LunchCardLabel(title: lunch.name, image: "mappin")
             LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-            LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
+            LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants) ?? 0), image: "person.2")
         }
     }
 
