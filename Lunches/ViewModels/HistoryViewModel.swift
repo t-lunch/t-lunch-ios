@@ -40,4 +40,24 @@ final class HistoryViewModel: ObservableObject {
             }
         }
     }
+
+    func onLikeAction(_ lunch: LunchFeedback) {
+        networkManager.rateLunch(
+            userId: IntId(authManager.userId),
+            lunchId: lunch.lunch.id,
+            isLiked: lunch.isLiked
+        ) { response in
+            switch response {
+            case .success:
+                break
+            case let .failure(failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error at rating lunch")
+                }
+            }
+        }
+        fetchData()
+    }
 }

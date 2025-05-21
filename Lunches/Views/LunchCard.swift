@@ -11,9 +11,12 @@ struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
     var hasJoined: Bool = false
-    var isLiked: Binding<Bool>? = nil
+    var isLiked: Bool = false
+    @State private var isLikedInternal: Bool = false
+    var showLikeButton: Bool = false
     var joinAction: () -> Void = {}
     var leaveAction: () -> Void = {}
+    var isLikedAction: () -> Void = {}
 
     @State private var isProcessing = false
 
@@ -22,21 +25,25 @@ struct LunchCard: View {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(.systemBackground))
                 .shadow(color: .primary.opacity(0.2), radius: 10)
+
             VStack(alignment: .leading) {
                 HStack {
                     Text("Обед от \(lunch.name)")
                         .font(.title3)
                         .bold()
+
                     Spacer()
-                    if let isLiked {
+
+                    if showLikeButton {
                         Button {
                             withAnimation(.bouncy) {
-                                isLiked.wrappedValue.toggle()
+                                isLikedInternal.toggle()
+                                isLikedAction()
                             }
                         } label: {
-                            Image(systemName: isLiked.wrappedValue ? "heart.fill" : "heart")
+                            Image(systemName: isLikedInternal ? "heart.fill" : "heart")
                                 .font(.system(size: 28))
-                                .foregroundColor(isLiked.wrappedValue ? .red : .accentColor)
+                                .foregroundColor(isLikedInternal ? .red : .accentColor)
                         }
                     }
                 }
@@ -68,6 +75,9 @@ struct LunchCard: View {
             }
             .padding()
         }
+        .onAppear {
+            isLikedInternal = isLiked
+        }
         .aspectRatio(2 / 1, contentMode: .fit)
         .padding(.horizontal)
     }
@@ -93,18 +103,24 @@ struct LunchCardLabel: View {
     }
 }
 
-/// cклоняет слово 'участника'
+/// Склонение слова "участник"
 func inflectParticipant(_ n: Int) -> String {
     switch n % 10 {
-    case 1:
-        "\(n) участник"
-    case 2 ... 4:
-        "\(n) участника"
+    case 1 where n % 100 != 11:
+        return "\(n) участник"
+    case 2 ... 4 where !(12 ... 14).contains(n % 100):
+        return "\(n) участника"
     default:
-        "\(n) участников"
+        return "\(n) участников"
     }
 }
 
 #Preview {
-    LunchCard(lunch: Lunch.example, isAvailable: true, isLiked: Binding(get: { true }, set: { _ in }))
+    LunchCard(
+        lunch: Lunch.example,
+        isAvailable: true,
+        hasJoined: false,
+        isLiked: true,
+        showLikeButton: true
+    )
 }
