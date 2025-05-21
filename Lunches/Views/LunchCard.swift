@@ -10,8 +10,12 @@ import SwiftUI
 struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
+    var hasJoined: Bool = false
     var isLiked: Binding<Bool>? = nil
     var joinAction: () -> Void = {}
+    var leaveAction: () -> Void = {}
+
+    @State private var isProcessing = false
 
     var body: some View {
         ZStack {
@@ -24,32 +28,42 @@ struct LunchCard: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    if isLiked != nil {
+                    if let isLiked {
                         Button {
                             withAnimation(.bouncy) {
-                                isLiked!.wrappedValue.toggle()
+                                isLiked.wrappedValue.toggle()
                             }
-
                         } label: {
-                            Image(systemName: isLiked!.wrappedValue ? "heart.fill" : "heart")
+                            Image(systemName: isLiked.wrappedValue ? "heart.fill" : "heart")
                                 .font(.system(size: 28))
-                                .foregroundColor(isLiked!.wrappedValue ? .red : .accentColor)
+                                .foregroundColor(isLiked.wrappedValue ? .red : .accentColor)
                         }
                     }
                 }
+
                 LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
                 LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants) ?? 0), image: "person.2")
 
-                if isAvailable {
+                if isAvailable || hasJoined {
                     Button {
-                        joinAction()
+                        isProcessing = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            isProcessing = false
+                            hasJoined ? leaveAction() : joinAction()
+                        }
                     } label: {
-                        Text("Присоединиться")
-                            .frame(maxWidth: .infinity)
+                        if isProcessing {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Text(hasJoined ? "Отказаться" : "Присоединиться")
+                                .frame(maxWidth: .infinity)
+                        }
                     }
-                    .buttonStyle(.smallLunchButton)
+                    .buttonStyle(.smallLunchButton(hasJoined: hasJoined))
                     .padding(.vertical, 5)
+                    .disabled(isProcessing)
                 }
             }
             .padding()

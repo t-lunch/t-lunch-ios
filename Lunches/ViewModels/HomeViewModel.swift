@@ -103,6 +103,25 @@ final class HomeViewModel: ObservableObject {
         fetchData()
     }
 
+    func leaveLunch(_ lunch: Lunch) {
+        networkManager.leaveLunch(
+            lunchId: lunch.id,
+            userId: IntId(authManager.userId)
+        ) { response in
+            switch response {
+            case .success:
+                break
+            case let .failure(failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error at joining lunch")
+                }
+            }
+        }
+        fetchData()
+    }
+
     func saveNewLunch() {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"

@@ -14,12 +14,27 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    ForEach(viewModel.lunches) { lunch in
-                        LunchCard(lunch: lunch, isAvailable: !viewModel.verifyAttendance(to: lunch), joinAction: {
-                            viewModel.joinLunch(lunch)
-                        })
-                        .onTapGesture {
-                            viewModel.selectedLunch = lunch
+                    if viewModel.lunches.isEmpty {
+                        Text("Доступных обедов нет")
+                            .foregroundColor(.gray)
+                            .font(.headline)
+                            .padding()
+                    } else {
+                        ForEach(sortedLunches) { lunch in
+                            LunchCard(
+                                lunch: lunch,
+                                isAvailable: !viewModel.verifyAttendance(to: lunch),
+                                hasJoined: viewModel.verifyAttendance(to: lunch),
+                                joinAction: {
+                                    viewModel.joinLunch(lunch)
+                                },
+                                leaveAction: {
+                                    viewModel.leaveLunch(lunch)
+                                }
+                            )
+                            .onTapGesture {
+                                viewModel.selectedLunch = lunch
+                            }
                         }
                     }
                 }
@@ -54,6 +69,25 @@ struct HomeView: View {
         .refreshable {
             viewModel.fetchData()
         }
+    }
+
+    private var sortedLunches: [Lunch] {
+        viewModel.lunches
+            .filter {
+                viewModel.searchText.isEmpty ||
+                    $0.name.localizedCaseInsensitiveContains(viewModel.searchText) ||
+                    $0.place.localizedCaseInsensitiveContains(viewModel.searchText)
+            }
+            .sorted { lhs, rhs in
+                let lhsJoined = viewModel.verifyAttendance(to: lhs)
+                let rhsJoined = viewModel.verifyAttendance(to: rhs)
+
+                if lhsJoined != rhsJoined {
+                    return lhsJoined // true выше false
+                }
+
+                return lhs.time < rhs.time // раньше — выше
+            }
     }
 }
 
