@@ -12,3 +12,7 @@ struct ServerErrorResponse: Decodable {
     let message: String
     let details: [String]?
 }
+
+struct smallServerErrorResponse: Decodable {
+    let Message: String
+}

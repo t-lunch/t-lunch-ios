@@ -71,8 +71,9 @@ enum LunchEndpoint {
 
     private var queryItems: [URLQueryItem] {
         switch self {
-        case let .getLunches(_, _, offset, limit):
+        case let .getLunches(_, userId, offset, limit):
             return [
+                URLQueryItem(name: "user_id", value: String(userId)),
                 URLQueryItem(name: "offset", value: String(offset)),
                 URLQueryItem(name: "limit", value: String(limit)),
             ]
@@ -93,11 +94,12 @@ enum LunchEndpoint {
              .refresh,
              .createLunch:
             return HTTP.Method.post.rawValue
-        case .changeProfile,
-             .joinLunch,
+        case .joinLunch,
              .leaveLunch,
              .rateLunch:
             return HTTP.Method.patch.rawValue
+        case .changeProfile:
+            return HTTP.Method.put.rawValue
         }
     }
 
@@ -108,11 +110,16 @@ enum LunchEndpoint {
         case let .login(_, request):
             return try? JSONEncoder().encode(request)
         case let .refresh(_, token):
-            return try? JSONEncoder().encode(["refresh_token": token])
+            return try? JSONEncoder().encode(["refreshToken": token])
         case let .changeProfile(_, user):
             return try? JSONEncoder().encode(user)
         case let .createLunch(_, request):
-            return try? JSONEncoder().encode(request)
+            let encoder = JSONEncoder()
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXX"
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            encoder.dateEncodingStrategy = .formatted(formatter)
+            return try? encoder.encode(request)
         case let .joinLunch(_, _, userId),
              let .leaveLunch(_, _, userId):
             return try? JSONEncoder().encode(["user_id": userId])
@@ -120,19 +127,6 @@ enum LunchEndpoint {
             return try? JSONEncoder().encode(["is_liked": isLiked])
         default:
             return nil
-        }
-    }
-}
-
-extension URLRequest {
-    mutating func addValues(for endpoint: LunchEndpoint) {
-        switch endpoint {
-        default:
-            setValue("*/*", forHTTPHeaderField: "Accept")
-            setValue("gzip, deflate, br", forHTTPHeaderField: "Accept-Encoding")
-            setValue("keep-alive", forHTTPHeaderField: "Connection")
-            setValue("YourApp/1.0", forHTTPHeaderField: "User-Agent")
-            setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
     }
 }

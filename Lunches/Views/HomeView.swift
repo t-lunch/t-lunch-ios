@@ -14,12 +14,27 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    ForEach(viewModel.lunches) { lunch in
-                        LunchCard(lunch: lunch, isAvailable: true, joinAction: {
-                            viewModel.joinLunch(lunch)
-                        })
-                        .onTapGesture {
-                            viewModel.selectedLunch = lunch
+                    if viewModel.lunches.isEmpty {
+                        Text("Доступных обедов нет")
+                            .foregroundColor(.gray)
+                            .font(.headline)
+                            .padding()
+                    } else {
+                        ForEach(sortedLunches) { lunch in
+                            LunchCard(
+                                lunch: lunch,
+                                isAvailable: !viewModel.verifyAttendance(to: lunch),
+                                hasJoined: viewModel.verifyAttendance(to: lunch),
+                                joinAction: {
+                                    viewModel.joinLunch(lunch)
+                                },
+                                leaveAction: {
+                                    viewModel.leaveLunch(lunch)
+                                }
+                            )
+                            .onTapGesture {
+                                viewModel.selectedLunch = lunch
+                            }
                         }
                     }
                 }
@@ -40,7 +55,7 @@ struct HomeView: View {
             .sheet(item: $viewModel.selectedLunch, onDismiss: {
                 viewModel.selectedLunch = nil
             }) { lunch in
-                DetailView(lunch: lunch)
+                DetailView(lunch: lunch, viewModel: viewModel)
                     .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $viewModel.isAddingSheetPresented, onDismiss: {
@@ -51,11 +66,34 @@ struct HomeView: View {
             }
             .navigationTitle("Главная")
         }
+        .refreshable {
+            viewModel.fetchData()
+        }
+    }
+
+    private var sortedLunches: [Lunch] {
+        viewModel.lunches
+            .filter {
+                viewModel.searchText.isEmpty ||
+                    $0.name.localizedCaseInsensitiveContains(viewModel.searchText) ||
+                    $0.place.localizedCaseInsensitiveContains(viewModel.searchText)
+            }
+            .sorted { lhs, rhs in
+                let lhsJoined = viewModel.verifyAttendance(to: lhs)
+                let rhsJoined = viewModel.verifyAttendance(to: rhs)
+
+                if lhsJoined != rhsJoined {
+                    return lhsJoined // true выше false
+                }
+
+                return lhs.time < rhs.time // раньше — выше
+            }
     }
 }
 
 struct DetailView: View {
     let lunch: Lunch
+    @ObservedObject var viewModel: HomeViewModel
     @State var isAvailable: Bool = true
     @Environment(\.dismiss) private var dismiss
 
@@ -71,11 +109,14 @@ struct DetailView: View {
             Spacer()
         }
         .padding()
+        .onAppear {
+            viewModel.fetchParticipants(for: lunch)
+        }
     }
 
     var participantsSection: some View {
         Section {
-            ForEach(lunch.users, id: \.userId) { participant in
+            ForEach(viewModel.participants, id: \.userId) { participant in
                 HStack {
                     Text(participant.name)
 
@@ -116,7 +157,7 @@ struct DetailView: View {
         VStack(alignment: .leading) {
             LunchCardLabel(title: lunch.name, image: "mappin")
             LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-            LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
+            LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants) ?? 0), image: "person.2")
         }
     }
 

@@ -10,49 +10,73 @@ import SwiftUI
 struct LunchCard: View {
     var lunch: Lunch
     var isAvailable: Bool = false
-    var isLiked: Binding<Bool>? = nil
+    var hasJoined: Bool = false
+    var isLiked: Bool = false
+    @State private var isLikedInternal: Bool = false
+    var showLikeButton: Bool = false
     var joinAction: () -> Void = {}
+    var leaveAction: () -> Void = {}
+    var isLikedAction: () -> Void = {}
+
+    @State private var isProcessing = false
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(.systemBackground))
                 .shadow(color: .primary.opacity(0.2), radius: 10)
+
             VStack(alignment: .leading) {
                 HStack {
                     Text("Обед от \(lunch.name)")
                         .font(.title3)
                         .bold()
+
                     Spacer()
-                    if isLiked != nil {
+
+                    if showLikeButton {
                         Button {
                             withAnimation(.bouncy) {
-                                isLiked!.wrappedValue.toggle()
+                                isLikedInternal.toggle()
+                                isLikedAction()
                             }
-
                         } label: {
-                            Image(systemName: isLiked!.wrappedValue ? "heart.fill" : "heart")
+                            Image(systemName: isLikedInternal ? "heart.fill" : "heart")
                                 .font(.system(size: 28))
-                                .foregroundColor(isLiked!.wrappedValue ? .red : .accentColor)
+                                .foregroundColor(isLikedInternal ? .red : .accentColor)
                         }
                     }
                 }
+
                 LunchCardLabel(title: lunch.place, image: "mappin")
                 LunchCardLabel(title: lunch.time.formatted(date: .omitted, time: .shortened), image: "alarm")
-                LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants)), image: "person.2")
+                LunchCardLabel(title: inflectParticipant(Int(lunch.numberOfParticipants) ?? 0), image: "person.2")
 
-                if isAvailable {
+                if isAvailable || hasJoined {
                     Button {
-                        joinAction()
+                        isProcessing = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            isProcessing = false
+                            hasJoined ? leaveAction() : joinAction()
+                        }
                     } label: {
-                        Text("Присоединиться")
-                            .frame(maxWidth: .infinity)
+                        if isProcessing {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Text(hasJoined ? "Отказаться" : "Присоединиться")
+                                .frame(maxWidth: .infinity)
+                        }
                     }
-                    .buttonStyle(.smallLunchButton)
+                    .buttonStyle(.smallLunchButton(hasJoined: hasJoined))
                     .padding(.vertical, 5)
+                    .disabled(isProcessing)
                 }
             }
             .padding()
+        }
+        .onAppear {
+            isLikedInternal = isLiked
         }
         .aspectRatio(2 / 1, contentMode: .fit)
         .padding(.horizontal)
@@ -79,18 +103,24 @@ struct LunchCardLabel: View {
     }
 }
 
-/// cклоняет слово 'участника'
+/// Склонение слова "участник"
 func inflectParticipant(_ n: Int) -> String {
     switch n % 10 {
-    case 1:
-        "\(n) участник"
-    case 2 ... 4:
-        "\(n) участника"
+    case 1 where n % 100 != 11:
+        return "\(n) участник"
+    case 2 ... 4 where !(12 ... 14).contains(n % 100):
+        return "\(n) участника"
     default:
-        "\(n) участников"
+        return "\(n) участников"
     }
 }
 
 #Preview {
-    LunchCard(lunch: Lunch.example, isAvailable: true, isLiked: Binding(get: { true }, set: { _ in }))
+    LunchCard(
+        lunch: Lunch.example,
+        isAvailable: true,
+        hasJoined: false,
+        isLiked: true,
+        showLikeButton: true
+    )
 }

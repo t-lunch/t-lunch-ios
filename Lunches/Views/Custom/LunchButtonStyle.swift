@@ -26,19 +26,25 @@ extension ButtonStyle where Self == LunchButtonStyle {
 }
 
 struct SmallLunchButtonStyle: ButtonStyle {
+    var hasJoined: Bool
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(15)
             .foregroundColor(.black)
-            .background(configuration.isPressed ? Color(.systemGray6) : .tYellow)
+            .background(
+                configuration.isPressed
+                    ? Color(.systemGray6)
+                    : (hasJoined ? Color.gray.opacity(0.3) : Color.tYellow)
+            )
             .cornerRadius(10)
             .frame(maxWidth: .infinity)
     }
 }
 
 extension ButtonStyle where Self == SmallLunchButtonStyle {
-    static var smallLunchButton: SmallLunchButtonStyle {
-        SmallLunchButtonStyle()
+    static func smallLunchButton(hasJoined: Bool = true) -> SmallLunchButtonStyle {
+        SmallLunchButtonStyle(hasJoined: hasJoined)
     }
 }
 

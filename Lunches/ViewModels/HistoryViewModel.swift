@@ -28,8 +28,8 @@ final class HistoryViewModel: ObservableObject {
         networkManager.getLunchHistory(userId: IntId(authManager.userId)) { result in
             switch result {
             case let .success(success):
-                self.lunches = success.map { lunch in
-                    LunchFeedback(lunch: lunch, isLiked: false)
+                DispatchQueue.main.async {
+                    self.lunches = success
                 }
             case let .failure(failure):
                 if let description = failure.errorDescription {
@@ -39,5 +39,25 @@ final class HistoryViewModel: ObservableObject {
                 }
             }
         }
+    }
+
+    func onLikeAction(_ lunch: LunchFeedback) {
+        networkManager.rateLunch(
+            userId: IntId(authManager.userId),
+            lunchId: lunch.lunch.id,
+            isLiked: lunch.isLiked
+        ) { response in
+            switch response {
+            case .success:
+                break
+            case let .failure(failure):
+                if let description = failure.errorDescription {
+                    self.globalLogger.logError(description)
+                } else {
+                    self.globalLogger.logError("Error at rating lunch")
+                }
+            }
+        }
+        fetchData()
     }
 }

@@ -71,13 +71,17 @@ class APIService: Service {
                     completion(nil, .serverError(errorResponse.message))
                     return
                 }
+                if let errorResponse = try? JSONDecoder().decode(smallServerErrorResponse.self, from: data) {
+                    completion(nil, .serverError(errorResponse.Message))
+                    return
+                }
 
                 if T.self == Data.self {
                     completion(data as? T, nil)
                     return
                 }
 
-                let result = try JSONDecoder().decode(T.self, from: data)
+                let result = try JSONDecoder.iso8601withTimeZone.decode(T.self, from: data)
                 completion(result, nil)
             } catch {
                 print(error)
@@ -85,4 +89,15 @@ class APIService: Service {
             }
         }.resume()
     }
+}
+
+extension JSONDecoder {
+    static let iso8601withTimeZone: JSONDecoder = {
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Или .XXX для +00:00
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        return decoder
+    }()
 }

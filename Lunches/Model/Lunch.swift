@@ -15,22 +15,9 @@ struct Lunch: Codable, Identifiable, Equatable {
     let surname: String
     let place: String
     let time: Date
-    let numberOfParticipants: Int64
+    let numberOfParticipants: IntId
     let description: String?
-    let users: [User]
-}
-
-extension Lunch {
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case surname
-        case place
-        case time
-        case numberOfParticipants = "number_of_participants"
-        case description
-        case users
-    }
+    let usersId: [IntId]
 }
 
 extension Lunch {
@@ -39,10 +26,10 @@ extension Lunch {
                                surname: "Surname",
                                place: "Place",
                                time: Date(),
-                               numberOfParticipants: 12,
+                               numberOfParticipants: "12",
                                description: "descriptiondescriptiondescriptiondescriptiondescriptiondescription",
-                               users: [
-                                   User(userId: "0", name: "Name", surname: "Surname", tg: "IVAN", office: "OFFICE", emoji: "😂"),
+                               usersId: [
+                                   "1",
                                ])
 }
 
@@ -51,13 +38,6 @@ extension Lunch {
 struct LunchFeedback: Codable, Equatable {
     let lunch: Lunch
     var isLiked: Bool
-}
-
-extension LunchFeedback {
-    enum CodingKeys: String, CodingKey {
-        case lunch
-        case isLiked = "is_liked"
-    }
 }
 
 // MARK: - LunchRequest
@@ -99,15 +79,6 @@ struct CreateLunchRequest: Codable, Equatable {
     let description: String
 }
 
-extension CreateLunchRequest {
-    enum CodingKeys: String, CodingKey {
-        case userId = "user_id"
-        case place
-        case time
-        case description
-    }
-}
-
 // MARK: - LunchResponse
 
 struct LunchResponse: Codable, Equatable {
@@ -134,10 +105,9 @@ struct DetailLunchRequest: Codable, Equatable {
     let lunchId: IntId
 }
 
-extension DetailLunchRequest {
-    enum CodingKeys: String, CodingKey {
-        case lunchId = "lunch_id"
-    }
+struct getLunchesResponse: Codable {
+    let lunches: [Lunch]
+    let lunchId: IntId?
 }
 
 // MARK: - LunchHistoryResponse
@@ -152,12 +122,4 @@ struct RateLunchRequest: Codable, Equatable {
     let userId: IntId
     let lunchId: IntId
     let isLiked: Bool
-}
-
-extension RateLunchRequest {
-    enum CodingKeys: String, CodingKey {
-        case lunchId = "lunch_id"
-        case userId = "user_id"
-        case isLiked = "is_liked"
-    }
 }
